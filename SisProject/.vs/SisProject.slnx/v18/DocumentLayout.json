@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Code\\College\\SIS\\SisProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|D:\\Code\\College\\SIS\\SisProject\\SisProject\\SisProject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|solutionrelative:SisProject\\SisProject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SisProject.cpp",
+              "DocumentMoniker": "D:\\Code\\College\\SIS\\SisProject\\SisProject\\SisProject.cpp",
+              "RelativeDocumentMoniker": "SisProject\\SisProject.cpp",
+              "ToolTip": "D:\\Code\\College\\SIS\\SisProject\\SisProject\\SisProject.cpp",
+              "RelativeToolTip": "SisProject\\SisProject.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-04-14T08:10:53.511Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
