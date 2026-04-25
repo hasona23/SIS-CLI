@@ -5,6 +5,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|D:\\Code\\College\\SIS\\SisProject\\SisProject\\SisProject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|solutionrelative:SisProject\\SisProject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|D:\\Code\\College\\SIS\\SisProject\\SisProject\\stduent.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{8E39B9DD-74B8-450A-9218-1EA2B2EB7A84}|SisProject\\SisProject.vcxproj|solutionrelative:SisProject\\stduent.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,11 +18,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "stduent.txt",
+              "DocumentMoniker": "D:\\Code\\College\\SIS\\SisProject\\SisProject\\stduent.txt",
+              "RelativeDocumentMoniker": "SisProject\\stduent.txt",
+              "ToolTip": "D:\\Code\\College\\SIS\\SisProject\\SisProject\\stduent.txt",
+              "RelativeToolTip": "SisProject\\stduent.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-04-25T11:26:55.977Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -28,7 +45,7 @@
               "RelativeDocumentMoniker": "SisProject\\SisProject.cpp",
               "ToolTip": "D:\\Code\\College\\SIS\\SisProject\\SisProject\\SisProject.cpp",
               "RelativeToolTip": "SisProject\\SisProject.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsBAAAAAAAAAAAAACgBAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-04-14T08:10:53.511Z",
               "EditorCaption": ""
