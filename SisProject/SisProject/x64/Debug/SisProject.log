@@ -1,5 +1,2 @@
-﻿  SisProject.cpp
-D:\Code\College\SIS\SisProject\SisProject\SisProject.cpp(363,10): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\Code\College\SIS\SisProject\SisProject\SisProject.cpp(378,10): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\Code\College\SIS\SisProject\SisProject\SisProject.cpp(393,10): warning C4305: 'initializing': truncation from 'double' to 'float'
+﻿  StudentManagement.cpp
   SisProject.vcxproj -> D:\Code\College\SIS\SisProject\x64\Debug\SisProject.exe
