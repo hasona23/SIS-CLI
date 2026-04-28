@@ -1,9 +1,8 @@
-#include <iostream>
-
+#include "Menu.h"
 
 int main()
 {
-	
+	RunSis();
 	//MENU:=======================================
 	//STUDENTS
 	//  1- ADD

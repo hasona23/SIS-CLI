@@ -1,15 +1,15 @@
 #pragma once
 
 
-const char MALE_GENDER = 'M';
-const char FEMALE_GENDER = 'F';
-const int ID_LENGTH = 7;
-const int NATIONAL_ID_LENGTH = 14;
-const int PHONE_NUM_LENGTH = 11;
-const char* PHONE_NUM_PREFIX = "01";
-const int MIN_AGE = 17;
-const char* STUDENT_FILE_PATH = "./stduent.txt";
-const int MAX_NAME_LENGTH = 256;
+static const char MALE_GENDER = 'M';
+static const char FEMALE_GENDER = 'F';
+static const int ID_LENGTH = 7;
+static const int NATIONAL_ID_LENGTH = 14;
+static const int PHONE_NUM_LENGTH = 11;
+static const char* PHONE_NUM_PREFIX = "01";
+static const int MIN_AGE = 17;
+static const char* STUDENT_FILE_PATH = "./stduent.txt";
+static const int MAX_NAME_LENGTH = 256;
 
 enum Programs
 {
@@ -36,12 +36,12 @@ public:
 
 
 
-	int yearBirth;
-	int dayBirth;
-	int monthBirth;
+	int YearBirth;
+	int DayBirth;
+	int MonthBirth;
 };
 
-void PrintStudent(const Student s);
+
 //Validation ==========================================
 bool ValidateAge(int day, int month, int year);
 bool ValidatePhoneNumber(const char* num);
@@ -65,4 +65,4 @@ Student* LoadStudents(int* amount);
 void AddStudent(const Student student);
 
 void DeleteStudent(int index,const Student* students,int amount);
-void UpdateStudent(Student* student, const char* id, const char* name, const char* nationalId, const char* phone, Programs program, int level, float gpa);
+void UpdateStudent(Student* student,const char* name, const char* phone, Programs program, int level);

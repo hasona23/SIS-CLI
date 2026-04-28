@@ -39,3 +39,30 @@
 
 # debug information files
 *.dwo
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+# Visual Studio cache files
+vs/
+.vs/
+# Test results
+[Tt]est[Rr]esult*/
+*.trx
+*.VisualState.xml
+# NuGet Packages
+*.nupkg
+**/packages/*
+# Others
+*.log
+*.tmp
+*.pdb
+*.cache

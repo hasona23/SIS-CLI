@@ -1,24 +1,12 @@
-#include "StudentManagement.h"
 #define _CRT_SECURE_NO_WARNINGS
+#include "StudentManagement.h"
 #include <iostream>
 #include <ctime>
 #include <cmath>
 #include <fstream>
 #include <string>
 
-void PrintStudent(const Student s) {
-	std::cout << "========================\n";
-	std::cout << "ID           : " << s.Id << "\n";
-	std::cout << "Name         : " << s.Name << "\n";
-	std::cout << "National ID  : " << s.NationalId << "\n";
-	std::cout << "Phone        : " << s.PhoneNumber << "\n";
-	std::cout << "Gender       : " << s.Gender << "\n";
-	std::cout << "Program      : " << s.Program << "\n";
-	std::cout << "Level        : " << s.Level << "\n";
-	std::cout << "GPA          : " << s.Gpa << "\n";
-	std::cout << "Birthdate    : " << s.dayBirth << "/" << s.monthBirth << "/" << s.yearBirth << "\n";
-	std::cout << "========================\n";
-}
+
 
 //vALIDATION ===========================================================================================
 
@@ -108,7 +96,7 @@ bool ValidateStudentId(const char* id)
 		return false;
 	if (!isalnum(id[0]) || !isalnum(id[1]))
 		return false;
-	if (id[2] != 'P')
+	if (toupper(id[2]) != 'P')
 		return false;
 
 	for (int i = 3; i < strlen(id); i++)
@@ -175,12 +163,12 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 	file << student.Id << '\n';
 	file << student.NationalId << '\n';
 	file << student.Gender << '\n';
-	if (student.dayBirth < 10)
+	if (student.DayBirth < 10)
 		file << '0';
-	file << student.dayBirth << '/';
-	if (student.monthBirth < 10)
+	file << student.DayBirth << '/';
+	if (student.MonthBirth < 10)
 		file << '0';
-	file << student.monthBirth << '/' << student.yearBirth << '\n';
+	file << student.MonthBirth << '/' << student.YearBirth << '\n';
 	file << student.PhoneNumber << '\n';
 	file << student.Gpa << '\n';
 
@@ -191,7 +179,7 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 void AppendStudent(const Student student)
 {
 	std::ofstream file;
-	file.open(STUDENT_FILE_PATH);
+	file.open(STUDENT_FILE_PATH,std::ios::app);
 	if (file.is_open())
 		WriteStudentToFile(student, file);
 	else
@@ -240,7 +228,7 @@ Student* LoadStudents(int* amount)
 
 		//seperators are double the amout of students
 		separators /= 2;
-		std::cout << "Separators" << separators << '\n';
+		
 		*amount = separators;
 		Student* students = new Student[*amount];
 		int i = 0;
@@ -253,53 +241,52 @@ Student* LoadStudents(int* amount)
 			if (strcmp(buffer, "[----]") == 0)
 			{
 				isReadingStudent = !isReadingStudent;
-				std::cout << "BUF:" << buffer << isReadingStudent << '\n';
-			}
+				}
 			if (isReadingStudent)
 			{
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				strncpy(students[i].Name, buffer, MAX_NAME_LENGTH);
 				students[i].Name[MAX_NAME_LENGTH] = '\0';
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				strncpy(students[i].Id, buffer, ID_LENGTH);
 				students[i].Id[ID_LENGTH] = '\0';
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				strncpy(students[i].NationalId, buffer, NATIONAL_ID_LENGTH);
 				students[i].NationalId[NATIONAL_ID_LENGTH] = '\0';
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				students[i].Gender = buffer[0];
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				char dateBuffer[5];
 				strncpy(dateBuffer, buffer, 2);
 				dateBuffer[2] = '\0';
 
-				students[i].dayBirth = atoi(dateBuffer);
+				students[i].DayBirth = atoi(dateBuffer);
 				strncpy(dateBuffer, &buffer[3], 2);
 
 				dateBuffer[2] = '\0';
-				students[i].monthBirth = atoi(dateBuffer);
+				students[i].MonthBirth = atoi(dateBuffer);
 				strncpy(dateBuffer, &buffer[6], 4);
 				dateBuffer[4] = '\0';
 
-				students[i].yearBirth = atoi(dateBuffer);
+				students[i].YearBirth = atoi(dateBuffer);
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				strncpy(students[i].PhoneNumber, buffer, PHONE_NUM_LENGTH);
 				students[i].PhoneNumber[PHONE_NUM_LENGTH] = '\0';
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 
 				students[i].Gpa = std::stof(buffer);
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				students[i].Level = atoi(buffer);
 				file.getline(buffer, 512);
-				std::cout << "buffer" << buffer << '\n';
+				
 				students[i].Program = (Programs)atoi(buffer);
 
 				i++;
@@ -329,21 +316,21 @@ void DeleteStudent(int index,Student* students,int amount)
 	for (int i = index; i < amount; i++)
 		students[i] = students[i + 1];
 }
-void UpdateStudent(Student* student, const char* id,const char* name,const char* nationalId,const char* phone,Programs program,int level,float gpa)
+void UpdateStudent(Student* student,const char* name,const char* phone,Programs program,int level)
 {
-	strncpy(student->Id, id, ID_LENGTH);
-	student->Id[ID_LENGTH] = '\0';
+	//strncpy(student->Id, id, ID_LENGTH);
+	//student->Id[ID_LENGTH] = '\0';
 
 	strncpy(student->Name, name, MAX_NAME_LENGTH);
 	student->Name[MAX_NAME_LENGTH] = '\0';
 
-	strncpy(student->NationalId, nationalId, NATIONAL_ID_LENGTH);
-	student->NationalId[NATIONAL_ID_LENGTH] = '\0';
+	//strncpy(student->NationalId, nationalId, NATIONAL_ID_LENGTH);
+	//student->NationalId[NATIONAL_ID_LENGTH] = '\0';
 
 	strncpy(student->PhoneNumber, phone, PHONE_NUM_LENGTH);
 	student->PhoneNumber[PHONE_NUM_LENGTH] = '\0';
 
 	student->Program = program;
 	student->Level = level;
-	student->Gpa = gpa;
+	//student->Gpa = gpa;
 }
