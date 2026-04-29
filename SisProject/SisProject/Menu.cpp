@@ -54,7 +54,6 @@ void ListStudents(Student* students, int amount)
 	{
 		PrintStudent(students[i]);
 	}
-	delete[] students;
 }
 
 void AddNewStudent(Student* students, int amount)
@@ -122,7 +121,6 @@ void AddNewStudent(Student* students, int amount)
 		std::cin >> student.DayBirth >> student.MonthBirth >> student.YearBirth;
 		std::cin.ignore();
 	}
-	delete[] students;
 	AppendStudent(student);
 }
 
@@ -252,12 +250,15 @@ int StudentManagementMenu() {//studmng menu
 			break;
 	
 		default:cout << "Invalid input, please try again" << '\n';
-			
 			choice = 0;
 		}
-
+		if (choice >= 1 && choice <= 5)
+		{
+			SaveStudents(students,amount);
+			delete[] students;
+		}
 	}
-	//SaveStudents();
+	
 	return choice;
 }
 
