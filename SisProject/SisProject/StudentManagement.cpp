@@ -145,7 +145,7 @@ void CreateStudentFile()
 {
 	std::fstream file;
 	//creates file
-	file.open(STUDENT_FILE_PATH);
+	file.open(STUDENT_FILE_PATH,std::ios::app);
 
 	if (!file.is_open())
 	{
@@ -179,9 +179,27 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 void AppendStudent(const Student student)
 {
 	std::ofstream file;
-	file.open(STUDENT_FILE_PATH,std::ios::app);
-	if (file.is_open())
-		WriteStudentToFile(student, file);
+	file.open(STUDENT_FILE_PATH ,std::ios::app);
+	if (file.is_open()) {
+		file << "[----]\n";
+		file << student.Name << '\n';
+		file << student.Id << '\n';
+		file << student.NationalId << '\n';
+		file << student.Gender << '\n';
+		if (student.DayBirth < 10)
+			file << '0';
+		file << student.DayBirth << '/';
+		if (student.MonthBirth < 10)
+			file << '0';
+		file << student.MonthBirth << '/' << student.YearBirth << '\n';
+		file << student.PhoneNumber << '\n';
+		file << student.Gpa << '\n';
+
+		file << student.Level << '\n';
+		file << student.Program << '\n';
+		file << "[----]\n";
+		file.close();
+	}
 	else
 		std::cout << "Failed to write student to file";
 }
@@ -309,12 +327,16 @@ void AddStudent(const Student student)
 	AppendStudent(student);
 }
 
-void DeleteStudent(int index,Student* students,int amount)
+void DeleteStudent(int index,Student* students,int *amount)
 {
-	if (index >= amount)
+	if (index >= *amount)
 		return;
-	for (int i = index; i < amount; i++)
-		students[i] = students[i + 1];
+	else {
+		for (int i = index; i < (*amount -1); i++)
+			students[i] = students[i + 1];
+		*amount = *amount - 1;
+	}
+
 }
 void UpdateStudent(Student* student,const char* name,const char* phone,Programs program,int level)
 {

@@ -1,7 +1,24 @@
 #include "Menu.h"
-
+//#include "StudentManagement.h"
 int main()
 {
+	//Student student
+	//{
+	//	.Id = "25p0404",
+	//	.Name = "Moahmed",
+	//	.NationalId = "30803020400000",
+	//	.PhoneNumber = "010144444",
+	//	.Gender = 'm',
+	//	.Program = MCTA,
+	//	.Level = 1,
+	//	.Gpa = 2,
+
+	//	.YearBirth = 2000,
+	//	.DayBirth = 1,
+	//	.MonthBirth = 1
+	//	
+	//};
+	//AppendStudent(student);
 	RunSis();
 	//MENU:=======================================
 	//STUDENTS

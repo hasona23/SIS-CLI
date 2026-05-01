@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include <string>
 
 void PrintStudent(const Student s) {
 	std::cout << "========================\n";
@@ -54,6 +55,9 @@ void ListStudents(Student* students, int amount)
 	{
 		PrintStudent(students[i]);
 	}
+	std::cin.ignore();
+	std::cout << "press enter to continue...";
+	std::cin.get();
 }
 
 void AddNewStudent(Student* students, int amount)
@@ -116,10 +120,10 @@ void AddNewStudent(Student* students, int amount)
 		student.Gpa = 0.0;
 
 		student.Program = GetProgram();
-
-		std::cout << "Enter birth date day , month , year";
-		std::cin >> student.DayBirth >> student.MonthBirth >> student.YearBirth;
 		std::cin.ignore();
+		std::cout << "Enter birth date day , month , year: \n";
+		std::cin >> student.DayBirth >> student.MonthBirth >> student.YearBirth;
+		
 	}
 	AppendStudent(student);
 }
@@ -155,21 +159,23 @@ void SearchStudents(Student* students, int amount)
 	}
 	std::cin.ignore();
 }
-void DeleteStudent(Student* students, int amount)
+void DeleteStudent(Student* students, int *amount)
 {
-	for (int i = 0; i < amount; i++)
+	for (int i = 0; i < *amount; i++)
 	{
 		std::cout << (i + 1) << ") " << students[i].Id << " - " << students[i].Name << '\n';
 	}
 	int index = -1;
-	while (index < 0 || index > amount)
+	while (index < 0 || index > *amount)
 	{
-		std::cout << "Enter index(" << 1 << "-" << amount << ") or zero to exit: ";
+		std::cout << "Enter index(" << 1 << "-" << *amount << ") or zero to exit: ";
 		std::cin >> index;
 	}
 	index--;
-	if (index >= 0)
+	if (index >= 0) 
+	{
 		DeleteStudent(index, students, amount);
+	}
 }
 void UpdateStudent(Student* students, int amount)
 {
@@ -186,12 +192,12 @@ void UpdateStudent(Student* students, int amount)
 	index--;
 	std::string newName;
 	std::string newPhone;
-	Programs program;
+	Programs program = MCTA;
 	int level;
 
 	std::cin.ignore();
 	std::cout << "Enter new name or 0 to skip: ";
-	std::cin >> newName;
+	std::getline(std::cin,newName);
 
 	if (newName == "0")
 		newName = students[index].Name;
@@ -216,25 +222,26 @@ void UpdateStudent(Student* students, int amount)
 		UpdateStudent(&students[index], newName.c_str(), newPhone.c_str(), program, level);
 }
 int StudentManagementMenu() {//studmng menu
-	for (int i = 0; i < 3; i++) cout << "=";
+	
+
+	int choice = 0;
+	
+	while (choice != 6) {
+		system("cls");
+		for (int i = 0; i < 3; i++) cout << "=";
 	cout << " " << "Student Management" << " ";
 	for (int i = 0; i < 3; i++) cout << "=";
 	cout << '\n' << '\n';
 	cout << "1. Add New Student" << '\n' << "2. Search Student" << '\n' << "3. Update Student" << '\n' << "4. Delete Student" << '\n';
 	cout << "5. List All Student" << '\n' << "6. Back to Main Menu";
 	cout << '\n' << '\n';
-
-	int choice = 0;
-
-	while (choice != 6) {
 		cout << "Enter your choice: ";
 		cin >> choice;
-		Student* students;
+		Student* students = nullptr;
 		int amount = 0;
-		if (choice >= 1 && choice <= 5)
-		{
-			students = LoadStudents(&amount);
-		}
+		
+		students = LoadStudents(&amount);
+		
 		switch (choice) {
 		case 1:
 			AddNewStudent(students,amount);
@@ -244,19 +251,22 @@ int StudentManagementMenu() {//studmng menu
 			break;
 		case 3:UpdateStudent(students, amount);
 			break;
-		case 4: DeleteStudent(students, amount);
+		case 4: DeleteStudent(students, &amount);
 			break;
 		case 5: ListStudents(students, amount); 
 			break;
+		case 6:
+			std::cout << "Going back to main menu.\n";
+			break;
 	
-		default:cout << "Invalid input, please try again" << '\n';
+		default:
+			std::cout << "Invalid input, please try again" << '\n';
 			choice = 0;
 		}
-		if (choice >= 1 && choice <= 5)
-		{
-			SaveStudents(students,amount);
-			delete[] students;
-		}
+		if (choice != 1) {
+			SaveStudents(students, amount);
+		}delete[] students;
+		
 	}
 	
 	return choice;
@@ -301,19 +311,22 @@ int MainMenu() {//main menu func
 	int choice;
 	bool valid = false;
 	//int studmngout = studmng();
-	DisplayTitle("Student information system");
-	cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. Exit";
-	cout << '\n' << '\n';
+	
 	//validation of choice starts here
 	while (!valid) {
+		DisplayTitle("Student information system");
+		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. Exit";
+		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
 		cin >> choice;
+		valid = true;
 		switch (choice) {
-		case 1:valid = true;
+		case 1:
+			StudentManagementMenu();
 			break;
-		case 2:valid = true;
+		case 2:CourseManagementMenu();
 			break;
-		case 3:valid = true;
+		case 3:GradesManagementMenu();
 			break;
 		case 4:cout << "Exiting, thank you for using the program." << '\n';
 			return -1;
@@ -322,6 +335,7 @@ int MainMenu() {//main menu func
 			valid = false;
 
 		}
+		
 
 	}
 
@@ -365,25 +379,20 @@ int GradesManagementMenu() {//grades mng menu
 
 }
 
-int RunSis() { //should be the main func ultimately
-	int mmchoice = 0; int smchoice = 0; int cmchoice = 0; int gmchoice = 0; bool isrunning = true;
+int RunSis() {
+	//should be the main func ultimately
+	CreateStudentFile();
+	bool isrunning = true;
 
 	while (isrunning) {
-		mmchoice = MainMenu();
+		int menuStatus = MainMenu();
+		
 		std::cout << '\n';
-		if (mmchoice == -1) return 0;
-		if (mmchoice == 1) {
-			smchoice = StudentManagementMenu();
+		if (menuStatus == -1) isrunning = false;
+		
 
 
-		}
-		else if (mmchoice == 2) {
-			cmchoice = CourseManagementMenu();
-		}
-		else if (mmchoice == 3) { gmchoice = GradesManagementMenu(); }
-
-
-		system("cls");
+	
 	}
 
 
