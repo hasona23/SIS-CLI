@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CourseManagement.cpp" />
+    <ClCompile Include="GradesManagement.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="SisProject.cpp" />
     <ClCompile Include="StudentManagement.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CourseManagement.h" />
+    <ClInclude Include="GradesManagement.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="StudentManagement.h" />
   </ItemGroup>

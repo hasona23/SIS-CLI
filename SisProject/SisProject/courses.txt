@@ -1,0 +1,25 @@
+[----]
+CSE141
+COMPUTER WITH C++
+1
+[----]
+[----]
+CSE142
+COMPUTER WITH C
+2
+[----]
+[----]
+CSE143
+COMPUTER WITH JAVA
+3
+[----]
+[----]
+CSE144
+COMPUTER WITH PYTHON
+4
+[----]
+[----]
+CSE145
+COMPUTER WITH MIKE
+5
+[----]

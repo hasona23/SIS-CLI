@@ -88,7 +88,7 @@ bool ValidateNationalId(const char* id)
 }
 bool ValidateStudentId(const char* id)
 {
-	if (strlen(id) != ID_LENGTH)
+	if (strlen(id) != STUDENT_ID_LENGTH)
 	{
 		return false;
 	}
@@ -181,24 +181,7 @@ void AppendStudent(const Student student)
 	std::ofstream file;
 	file.open(STUDENT_FILE_PATH ,std::ios::app);
 	if (file.is_open()) {
-		file << "[----]\n";
-		file << student.Name << '\n';
-		file << student.Id << '\n';
-		file << student.NationalId << '\n';
-		file << student.Gender << '\n';
-		if (student.DayBirth < 10)
-			file << '0';
-		file << student.DayBirth << '/';
-		if (student.MonthBirth < 10)
-			file << '0';
-		file << student.MonthBirth << '/' << student.YearBirth << '\n';
-		file << student.PhoneNumber << '\n';
-		file << student.Gpa << '\n';
-
-		file << student.Level << '\n';
-		file << student.Program << '\n';
-		file << "[----]\n";
-		file.close();
+		WriteStudentToFile(student, file);
 	}
 	else
 		std::cout << "Failed to write student to file";
@@ -264,38 +247,38 @@ Student* LoadStudents(int* amount)
 			{
 				file.getline(buffer, 512);
 				
-				strncpy(students[i].Name, buffer, MAX_NAME_LENGTH);
-				students[i].Name[MAX_NAME_LENGTH] = '\0';
+				strncpy_s(students[i].Name, buffer, MAX_NAME_LENGTH);
+				//students[i].Name[MAX_NAME_LENGTH] = '\0';
 				file.getline(buffer, 512);
 				
-				strncpy(students[i].Id, buffer, ID_LENGTH);
-				students[i].Id[ID_LENGTH] = '\0';
+				strncpy_s(students[i].Id, buffer, STUDENT_ID_LENGTH);
+				//students[i].Id[STUDENT_ID_LENGTH] = '\0';
 				file.getline(buffer, 512);
 				
-				strncpy(students[i].NationalId, buffer, NATIONAL_ID_LENGTH);
-				students[i].NationalId[NATIONAL_ID_LENGTH] = '\0';
+				strncpy_s(students[i].NationalId, buffer, NATIONAL_ID_LENGTH);
+				//students[i].NationalId[NATIONAL_ID_LENGTH] = '\0';
 				file.getline(buffer, 512);
 				
 				students[i].Gender = buffer[0];
 				file.getline(buffer, 512);
 				
 				char dateBuffer[5];
-				strncpy(dateBuffer, buffer, 2);
+				strncpy_s(dateBuffer, buffer, 2);
 				dateBuffer[2] = '\0';
 
 				students[i].DayBirth = atoi(dateBuffer);
-				strncpy(dateBuffer, &buffer[3], 2);
-
+				strncpy_s(dateBuffer, &buffer[3], 2);
 				dateBuffer[2] = '\0';
+
 				students[i].MonthBirth = atoi(dateBuffer);
-				strncpy(dateBuffer, &buffer[6], 4);
-				dateBuffer[4] = '\0';
+				strncpy_s(dateBuffer, &buffer[6], 4);
+				//dateBuffer[4] = '\0';
 
 				students[i].YearBirth = atoi(dateBuffer);
 				file.getline(buffer, 512);
 				
-				strncpy(students[i].PhoneNumber, buffer, PHONE_NUM_LENGTH);
-				students[i].PhoneNumber[PHONE_NUM_LENGTH] = '\0';
+				strncpy_s(students[i].PhoneNumber, buffer, PHONE_NUM_LENGTH);
+				//students[i].PhoneNumber[PHONE_NUM_LENGTH] = '\0';
 				file.getline(buffer, 512);
 				
 
@@ -340,16 +323,16 @@ void DeleteStudent(int index,Student* students,int *amount)
 }
 void UpdateStudent(Student* student,const char* name,const char* phone,Programs program,int level)
 {
-	//strncpy(student->Id, id, ID_LENGTH);
+	//strncpy_s(student->Id, id, ID_LENGTH);
 	//student->Id[ID_LENGTH] = '\0';
 
-	strncpy(student->Name, name, MAX_NAME_LENGTH);
+	strncpy_s(student->Name, name, MAX_NAME_LENGTH);
 	student->Name[MAX_NAME_LENGTH] = '\0';
 
-	//strncpy(student->NationalId, nationalId, NATIONAL_ID_LENGTH);
+	//strncpy_s(student->NationalId, nationalId, NATIONAL_ID_LENGTH);
 	//student->NationalId[NATIONAL_ID_LENGTH] = '\0';
 
-	strncpy(student->PhoneNumber, phone, PHONE_NUM_LENGTH);
+	strncpy_s(student->PhoneNumber, phone, PHONE_NUM_LENGTH);
 	student->PhoneNumber[PHONE_NUM_LENGTH] = '\0';
 
 	student->Program = program;

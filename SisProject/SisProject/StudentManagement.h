@@ -3,7 +3,7 @@
 
 static const char MALE_GENDER = 'M';
 static const char FEMALE_GENDER = 'F';
-static const int ID_LENGTH = 7;
+static const int STUDENT_ID_LENGTH = 7;
 static const int NATIONAL_ID_LENGTH = 14;
 static const int PHONE_NUM_LENGTH = 11;
 static const char* PHONE_NUM_PREFIX = "01";
@@ -25,7 +25,7 @@ enum Programs
 struct Student
 {
 public:
-	char Id[ID_LENGTH + 1];
+	char Id[STUDENT_ID_LENGTH + 1];
 	char Name[MAX_NAME_LENGTH + 1];
 	char NationalId[NATIONAL_ID_LENGTH + 1];
 	char PhoneNumber[PHONE_NUM_LENGTH + 1];

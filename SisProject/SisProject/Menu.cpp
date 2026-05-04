@@ -79,7 +79,7 @@ void AddNewStudent(Student* students, int amount)
 		student.Name[MAX_NAME_LENGTH] = '\0';
 		std::cout << std::endl;
 		std::cout << "Enter Student Id: ";
-		std::cin >> setw(ID_LENGTH+1) >> student.Id;
+		std::cin >> setw(STUDENT_ID_LENGTH+1) >> student.Id;
 		bool returnToLoop = false;
 		for (int i = 0; i < amount; i++)
 		{
