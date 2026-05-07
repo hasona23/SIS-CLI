@@ -10,6 +10,33 @@ static const char ASCII_VERTICAL_LINE = 186;
 static const char ASCII_HORIZONTAL_LINE = 205;
 static const char ASCII_BOTTOM_LEFT_CORNER = 200;
 
+inline static bool ContainsStr(const char* searchTerm, const char* str)
+{
+	int searchLength = strlen(searchTerm);
+	int strLength = strlen(str);
+	for (int i = 0; str[i] != '\0'; i++)
+	{
+		if (str[i] == searchTerm[0])
+		{
+			//abcabcabc
+			//abc
+			if (i + searchLength <= strLength)
+			{
+				bool isFound = true;
+				for (int j = 1; j < searchLength; j++)
+				{
+					if (str[i + j] != searchTerm[j])
+					{
+						isFound = false;
+					}
+				}
+				if (isFound)
+					return true;
+			}
+		}
+	}
+}
+
 inline static void PressEnterPause()
 {
 	std::cout << "Press Enter to Continue...";
