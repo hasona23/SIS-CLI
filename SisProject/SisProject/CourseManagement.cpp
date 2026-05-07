@@ -207,7 +207,7 @@ void addCourse() {//will ultimately be called add course and then will be given 
 		cin.getline(course.Title, 256);
 		cout << endl;
 	}
-	cout << "Enter credit hrs: ";
+	cout << "Enter credit hrs (1 - 4): ";
 	cin >> course.CreditHours;
 	while (!validateCreditHrs(course)) {
 		cout << "Invalid Credit Hours. Credit hours are 1,2,3,or 4" << endl << "Enter credit hrs: ";
