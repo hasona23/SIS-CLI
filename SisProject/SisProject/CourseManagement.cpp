@@ -71,16 +71,12 @@ Course* LoadCourses(int* amount)
 		{
 			if (strcmp("[----]", buffer) == 0) {
 				separators++;
-
 			}
-
 		}
-
 		//rests the file read pointer
 
 		//seperators are double the amout of students
 		separators /= 2;
-
 		*amount = separators;
 		Course* courses = new Course[*amount];
 		int i = 0;
@@ -88,7 +84,7 @@ Course* LoadCourses(int* amount)
 		file.seekg(0, std::ios::beg);
 		while (file.getline(buffer, 512))
 		{
-			//std::cout << "BUFF: " << buffer << '\n';
+			
 
 			if (strcmp(buffer, "[----]") == 0)
 			{

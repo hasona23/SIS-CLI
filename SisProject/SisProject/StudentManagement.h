@@ -10,7 +10,10 @@ static const char* PHONE_NUM_PREFIX = "01";
 static const int MIN_AGE = 17;
 static const char* STUDENT_FILE_PATH = "./stduent.txt";
 static const int MAX_NAME_LENGTH = 256;
+static const int DATE_LENGTH = 10;
 
+static const int MAX_LEVEL = 4;
+static const int MIN_LEVEL = 1;
 enum Programs
 {
 	MCTA = 1,
@@ -32,18 +35,14 @@ public:
 	char Gender;
 	Programs Program;
 	int Level; // 1-4
-	float Gpa;
+	float Gpa = 0.0;
 
-
-
-	int YearBirth;
-	int DayBirth;
-	int MonthBirth;
+	char BirthDate[DATE_LENGTH + 1];
 };
 
 
 //Validation ==========================================
-bool ValidateAge(int day, int month, int year);
+bool ValidateAge(const char* birthDate);
 bool ValidatePhoneNumber(const char* num);
 bool ValidateGpa(double gpa);
 bool ValidateLevel(int level);
@@ -60,6 +59,7 @@ bool ValidateStudent(Student student);
 void SaveStudents(const Student* students, int amount);
 void AppendStudent(const Student student);
 void CreateStudentFile();
+//MUST FREE MEMORY STUDENTS at the end
 Student* LoadStudents(int* amount);
 //STUDENT CRUD =======================================
 void AddStudent(const Student student);

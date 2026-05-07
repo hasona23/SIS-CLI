@@ -25,7 +25,7 @@ void PrintStudent(const Student s);
 void ListStudents(Student* students, int amount);
 void AddNewStudent(Student* students, int amount);
 void SearchStudents(Student* students, int amount);
-void DeleteStudent(int index,Student* students, int amount);
+void DeleteStudent(Student* students, int *amount);
 void UpdateStudent(Student*students,int amount);
 int StudentManagementMenu();
 int CourseManagementMenu();

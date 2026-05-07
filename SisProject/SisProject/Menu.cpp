@@ -1,6 +1,13 @@
 #include "Menu.h"
 #include <string>
 
+void PressEnterPause()
+{
+	std::cout << "Press Enter to Continue...";
+	std::cin.ignore();
+	std::cin.get();
+}
+
 void PrintStudent(const Student s) {
 	std::cout << "========================\n";
 	std::cout << "ID           : " << s.Id << "\n";
@@ -11,7 +18,7 @@ void PrintStudent(const Student s) {
 	std::cout << "Program      : " << s.Program << "\n";
 	std::cout << "Level        : " << s.Level << "\n";
 	std::cout << "GPA          : " << s.Gpa << "\n";
-	std::cout << "Birthdate    : " << s.DayBirth << "/" << s.MonthBirth << "/" << s.YearBirth << "\n";
+	std::cout << "Birthdate    : " << s.BirthDate << "\n";
 	std::cout << "========================\n";
 }
 
@@ -63,68 +70,179 @@ void ListStudents(Student* students, int amount)
 void AddNewStudent(Student* students, int amount)
 {
 	Student student{};
-	while (!ValidateStudent(student))
+
+	std::string firstName = "";
+	std::string secondName = "";
+	std::string inputBuffer = "";
+
+
+	std::cout << "Enter student first name: ";
+	std::cin >> firstName;
+
+
+	std::cout << "Enter student second name: ";
+	std::cin >> secondName;
+
+	std::string fullName = firstName + " " + secondName;
+	strncpy_s(student.Name, fullName.c_str(), MAX_NAME_LENGTH);
+	student.Name[MAX_NAME_LENGTH] = '\0';
+	while (!ValidateName(student.Name))
 	{
-		std::string firstName = "";
-		std::string secondName = "";
-		std::cin.ignore();
+		std::cout << "Invalid Name [" << student.Name << "]. Enter in format [FirstName] [SecondName] or back to exit \n\n";
 		std::cout << "Enter student first name: ";
 		std::cin >> firstName;
-		std::cin.ignore();
+		if (firstName == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+		//std::cin.ignore();
 		std::cout << "Enter student second name: ";
 		std::cin >> secondName;
+		if (firstName == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
 
 		std::string fullName = firstName + " " + secondName;
-		strncpy(student.Name, fullName.c_str(), MAX_NAME_LENGTH);
+		strncpy_s(student.Name, fullName.c_str(), MAX_NAME_LENGTH);
 		student.Name[MAX_NAME_LENGTH] = '\0';
-		std::cout << std::endl;
-		std::cout << "Enter Student Id: ";
-		std::cin >> setw(STUDENT_ID_LENGTH+1) >> student.Id;
-		bool returnToLoop = false;
-		for (int i = 0; i < amount; i++)
-		{
-			if (strcmp(student.Id, students[i].Id) == 0)
-			{
-				std::cout << "ID Already exist!\n";
-				returnToLoop = true;
-				break;
-			}
-		}
-		if (returnToLoop)
-			continue;
-		std::cin.ignore();
+		continue;
+	}
+
+	std::cout << '\n';
+
+	std::cout << "Enter phone number: ";
+	std::cin >> inputBuffer;
+	while (!ValidatePhoneNumber(inputBuffer.c_str()))
+	{
+		std::cout << "Invalid PhoneNumber [" << inputBuffer << "]. format 01 + 9 digits or enter back to continue\n";
 		std::cout << "Enter phone number: ";
-		std::cin >>std::setw(PHONE_NUM_LENGTH+1) >> student.PhoneNumber;
-		std::cin.ignore();
-		std::cout << "Enter national ID: ";
-		std::cin >> std::setw(NATIONAL_ID_LENGTH+1) >> student.NationalId;
-		
+		std::cin >> inputBuffer;
+		if (inputBuffer == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	strncpy_s(student.PhoneNumber, inputBuffer.c_str(), PHONE_NUM_LENGTH);
+
+
+	std::cout << "Enter national ID: ";
+	std::cin >> inputBuffer;
+	bool isDuplicateNationalId = false;
+	for (int i = 0; i < amount; i++)
+	{
+		if (strcmp(student.NationalId, students[i].NationalId) == 0)
+		{
+			std::cout << "National Id Already exist!\n";
+			std::cout << "Press enter to continue...";
+			std::cin.get();
+			isDuplicateNationalId = true;
+			break;
+		}
+	}
+	while (!ValidateNationalId(inputBuffer.c_str()) || isDuplicateNationalId)
+	{
+		std::cout << "Invalid NationalID [" << inputBuffer << "]. should be of " << NATIONAL_ID_LENGTH << " digits or back to exit \n";
+		std::cin >> inputBuffer;
+		if (inputBuffer == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+		bool isDuplicateNationalId = false;
 		for (int i = 0; i < amount; i++)
 		{
 			if (strcmp(student.NationalId, students[i].NationalId) == 0)
 			{
 				std::cout << "National Id Already exist!\n";
-				returnToLoop = true;
+				std::cout << "Press enter to continue...";
+				std::cin.get();
+				isDuplicateNationalId = true;
 				break;
 			}
 		}
-		if (returnToLoop)
-			continue;
-		std::cin.ignore();
-		std::cout << "Enter Gender(" << MALE_GENDER << " - " << FEMALE_GENDER << "): ";
-		std::cin >> std::setw(1) >> student.Gender;
-
-		std::cout << "Enter student level: ";
-		std::cin >> student.Level;
-
-		student.Gpa = 0.0;
-
-		student.Program = GetProgram();
-		std::cin.ignore();
-		std::cout << "Enter birth date day , month , year: \n";
-		std::cin >> student.DayBirth >> student.MonthBirth >> student.YearBirth;
-		
+		continue;
 	}
+	strncpy_s(student.NationalId, inputBuffer.c_str(), NATIONAL_ID_LENGTH);
+
+
+
+	std::cout << "Enter Gender(" << MALE_GENDER << " - " << FEMALE_GENDER << "): ";
+	std::cin >> inputBuffer;
+	while (!ValidateGender(inputBuffer[0]))
+	{
+		std::cout << "Invalid Gender [" << student.Gender << "]. should be (" << MALE_GENDER << " - " << FEMALE_GENDER << ") or back to continue\n";
+		std::cin >> inputBuffer;
+		if (inputBuffer == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	student.Gender = toupper(inputBuffer[0]);
+
+	std::cout << "Enter student level: ";
+	std::cin >> student.Level;
+	while (!ValidateLevel(student.Level))
+	{
+		std::cout << "Invalid Level [" << student.Level << "]. (" << MIN_LEVEL << " , " << MAX_LEVEL << ")\n";
+		std::cin >> student.Level;
+	}
+
+	student.Gpa = 0.0;
+
+	student.Program = GetProgram();
+
+	std::cout << "Enter birth (DD/MM/YYYY): ";
+	std::cin >> inputBuffer;
+	while (!ValidateAge(inputBuffer.c_str()))
+	{
+		std::cout << "Invalid BirthDate [" << inputBuffer << "]. Format DD/MM/YYYY or back to exit \n";
+		std::cin >> inputBuffer;
+		if (inputBuffer == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	strncpy_s(student.BirthDate, inputBuffer.c_str(), DATE_LENGTH);
+
+	int maxId = 0;
+	for (int i = 0; i < amount; i++)
+	{
+		//25p0000
+		std::string idStr = std::string(students[i].Id);
+		int id = stoi(idStr.substr(3, 4));
+		if (id > maxId)
+			maxId = id;
+	}
+	//To get next id in sequence;
+	maxId++;
+	if (maxId > 9999)
+	{
+		std::cout << "Reached maximum ID count.\n";
+		PressEnterPause();
+	}
+	std::string newIdStr = std::to_string(maxId);
+	int missingPaddingZeroes = 4 - newIdStr.length() ;
+	for (int i = 0; i < missingPaddingZeroes; i++)
+	{
+		newIdStr = "0" + newIdStr;
+	}
+	std::string newId = "25P" + newIdStr;
+	std::cout << newId << '\n';
+	strncpy_s(student.Id, newId.c_str(), STUDENT_ID_LENGTH);
+	PrintStudent(student);
+
 	AppendStudent(student);
 }
 
@@ -146,20 +264,20 @@ void SearchStudents(Student* students, int amount)
 	std::cout << "Amount: " << amount << '\n';
 	for (int i = 0; i < amount; i++)
 	{
-		bool nameFilter = (searchName=="0" || (searchName == students[i].Name));
-		bool idFilter = (searchId=="0" || (searchId == students[i].Id));
-		bool phoneFilter = (searchPhoneNumber == "0"  || (searchPhoneNumber == students[i].PhoneNumber));
-		bool nationalIdFilter = (searchNationalId=="0" || (searchNationalId == students[i].NationalId));
+		bool nameFilter = (searchName == "0" || (searchName == students[i].Name));
+		bool idFilter = (searchId == "0" || (searchId == students[i].Id));
+		bool phoneFilter = (searchPhoneNumber == "0" || (searchPhoneNumber == students[i].PhoneNumber));
+		bool nationalIdFilter = (searchNationalId == "0" || (searchNationalId == students[i].NationalId));
 		if (nameFilter && idFilter && phoneFilter && nationalIdFilter)
 			PrintStudent(students[i]);
 	}
 	std::cout << "Press Enter to conitnue..";
-	while(std::cin.get()!='\n')
+	while (std::cin.get() != '\n')
 	{
 	}
 	std::cin.ignore();
 }
-void DeleteStudent(Student* students, int *amount)
+void DeleteStudent(Student* students, int* amount)
 {
 	for (int i = 0; i < *amount; i++)
 	{
@@ -172,7 +290,7 @@ void DeleteStudent(Student* students, int *amount)
 		std::cin >> index;
 	}
 	index--;
-	if (index >= 0) 
+	if (index >= 0)
 	{
 		DeleteStudent(index, students, amount);
 	}
@@ -197,7 +315,7 @@ void UpdateStudent(Student* students, int amount)
 
 	std::cin.ignore();
 	std::cout << "Enter new name or 0 to skip: ";
-	std::getline(std::cin,newName);
+	std::getline(std::cin, newName);
 
 	if (newName == "0")
 		newName = students[index].Name;
@@ -222,29 +340,29 @@ void UpdateStudent(Student* students, int amount)
 		UpdateStudent(&students[index], newName.c_str(), newPhone.c_str(), program, level);
 }
 int StudentManagementMenu() {//studmng menu
-	
+
 
 	int choice = 0;
-	
+
 	while (choice != 6) {
 		system("cls");
 		for (int i = 0; i < 3; i++) cout << "=";
-	cout << " " << "Student Management" << " ";
-	for (int i = 0; i < 3; i++) cout << "=";
-	cout << '\n' << '\n';
-	cout << "1. Add New Student" << '\n' << "2. Search Student" << '\n' << "3. Update Student" << '\n' << "4. Delete Student" << '\n';
-	cout << "5. List All Student" << '\n' << "6. Back to Main Menu";
-	cout << '\n' << '\n';
+		cout << " " << "Student Management" << " ";
+		for (int i = 0; i < 3; i++) cout << "=";
+		cout << '\n' << '\n';
+		cout << "1. Add New Student" << '\n' << "2. Search Student" << '\n' << "3. Update Student" << '\n' << "4. Delete Student" << '\n';
+		cout << "5. List All Student" << '\n' << "6. Back to Main Menu";
+		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
 		cin >> choice;
 		Student* students = nullptr;
 		int amount = 0;
-		
+
 		students = LoadStudents(&amount);
-		
+
 		switch (choice) {
 		case 1:
-			AddNewStudent(students,amount);
+			AddNewStudent(students, amount);
 			break;
 		case 2:
 			SearchStudents(students, amount);
@@ -253,12 +371,12 @@ int StudentManagementMenu() {//studmng menu
 			break;
 		case 4: DeleteStudent(students, &amount);
 			break;
-		case 5: ListStudents(students, amount); 
+		case 5: ListStudents(students, amount);
 			break;
 		case 6:
 			std::cout << "Going back to main menu.\n";
 			break;
-	
+
 		default:
 			std::cout << "Invalid input, please try again" << '\n';
 			choice = 0;
@@ -266,9 +384,9 @@ int StudentManagementMenu() {//studmng menu
 		if (choice != 1) {
 			SaveStudents(students, amount);
 		}delete[] students;
-		
+
 	}
-	
+
 	return choice;
 }
 
@@ -311,7 +429,7 @@ int MainMenu() {//main menu func
 	int choice;
 	bool valid = false;
 	//int studmngout = studmng();
-	
+
 	//validation of choice starts here
 	while (!valid) {
 		DisplayTitle("Student information system");
@@ -335,7 +453,7 @@ int MainMenu() {//main menu func
 			valid = false;
 
 		}
-		
+
 
 	}
 
@@ -386,13 +504,13 @@ int RunSis() {
 
 	while (isrunning) {
 		int menuStatus = MainMenu();
-		
+
 		std::cout << '\n';
 		if (menuStatus == -1) isrunning = false;
-		
 
 
-	
+
+
 	}
 
 

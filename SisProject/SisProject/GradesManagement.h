@@ -19,4 +19,5 @@ struct Grade
 void SaveGrades(const Grade* grades, int amount);
 void AppendGrade(const Grade* grades);
 void CreateGradesFile();
+//MUST FREE MEMORY Grades at the end
 Grade* LoadGrades(int* amount);

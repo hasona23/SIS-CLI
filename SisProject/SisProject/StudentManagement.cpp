@@ -5,34 +5,32 @@
 #include <cmath>
 #include <fstream>
 #include <string>
-
+#include <chrono>
 
 
 //vALIDATION ===========================================================================================
 
-bool ValidateAge(int day, int month, int year)
+bool ValidateAge(const char* birthDate)
 {
-	time_t currentTime = time(0);
-	struct tm* current = localtime(&currentTime);
+	std::chrono::year_month_day date;
+	
+	std::istringstream ss(birthDate);
+	ss >> std::chrono::parse("%d/%m/%Y", date);
 
-	int currentYear = current->tm_year + 1900;
-	int currentMonth = current->tm_mon + 1;
-	int currentDay = current->tm_mday;
-
-	if (currentYear - year < MIN_AGE)
+	if (ss.fail() || !date.ok())
 		return false;
-	else if (currentYear - year > MIN_AGE)
-		return true;
+	auto currentTimePoint = std::chrono::system_clock::now();
+	std::chrono::year_month_day today = std::chrono::year_month_day{std::chrono::floor<std::chrono::days>(currentTimePoint)};
+	//Subtract years
+	int age = (int)today.year() - (int)date.year();
 
-	if (currentMonth < month)
+	//Check if not reached current month and date to reduce year
+	if (today.month() < date.month() || (today.month() == date.month() && today.day() < date.day()))
+		age--;
+	//Check age
+	if (age < 17) 
 		return false;
-	else if (currentMonth > month)
-		return true;
 
-	if (currentDay < day)
-		return false;
-
-	delete current;
 
 	return true;
 }
@@ -40,8 +38,6 @@ bool ValidateAge(int day, int month, int year)
 
 bool ValidatePhoneNumber(const char* num)
 {
-	time_t t = time(0);
-
 	if (strlen(num) != PHONE_NUM_LENGTH)
 		return false;
 	for (int i = 0; i < strlen(PHONE_NUM_PREFIX); i++)
@@ -61,9 +57,10 @@ bool ValidateGpa(double gpa)
 {
 	return gpa >= 0 && gpa <= 4;
 }
+
 bool ValidateLevel(int level)
 {
-	return level >= 1 && level <= 4;
+	return level >= MIN_LEVEL && level <= MAX_LEVEL;
 }
 
 bool ValidateProgram(int program)
@@ -73,6 +70,10 @@ bool ValidateProgram(int program)
 
 bool ValidateGender(char gender)
 {
+	if (gender >= 'a' && gender <= 'z') {
+		int diff = 'A' - 'a';
+		gender += diff;
+	}
 	return gender == MALE_GENDER || gender == FEMALE_GENDER;
 }
 bool ValidateNationalId(const char* id)
@@ -145,7 +146,7 @@ void CreateStudentFile()
 {
 	std::fstream file;
 	//creates file
-	file.open(STUDENT_FILE_PATH,std::ios::app);
+	file.open(STUDENT_FILE_PATH, std::ios::app);
 
 	if (!file.is_open())
 	{
@@ -154,7 +155,7 @@ void CreateStudentFile()
 		std::cin.get();
 		std::exit(1);
 	}
-	
+
 }
 void WriteStudentToFile(const Student student, std::ofstream& file)
 {
@@ -163,23 +164,20 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 	file << student.Id << '\n';
 	file << student.NationalId << '\n';
 	file << student.Gender << '\n';
-	if (student.DayBirth < 10)
-		file << '0';
-	file << student.DayBirth << '/';
-	if (student.MonthBirth < 10)
-		file << '0';
-	file << student.MonthBirth << '/' << student.YearBirth << '\n';
+	file << student.BirthDate;
 	file << student.PhoneNumber << '\n';
 	file << student.Gpa << '\n';
 
 	file << student.Level << '\n';
 	file << student.Program << '\n';
+
+
 	file << "[----]\n";
 }
 void AppendStudent(const Student student)
 {
 	std::ofstream file;
-	file.open(STUDENT_FILE_PATH ,std::ios::app);
+	file.open(STUDENT_FILE_PATH, std::ios::app);
 	if (file.is_open()) {
 		WriteStudentToFile(student, file);
 	}
@@ -189,26 +187,25 @@ void AppendStudent(const Student student)
 void SaveStudents(const Student* students, int amount)
 {
 	std::ofstream file;
-	file.open(STUDENT_FILE_PATH,std::ios::trunc);
+	file.open(STUDENT_FILE_PATH, std::ios::trunc);
 	if (file.is_open())
 	{
 		for (int i = 0; i < amount; i++)
 		{
-			if(strlen(students[i].Name)!=0 && strlen(students[i].Id) != 0)
-				WriteStudentToFile(students[i],file);
+			if (strlen(students[i].Name) != 0 && strlen(students[i].Id) != 0)
+				WriteStudentToFile(students[i], file);
 		}
 		file.close();
 	}
 	else {
 		std::cout << "Error Opening file to save\n";
 	}
-
 }
 Student* LoadStudents(int* amount)
 {
 	std::ifstream file;
 	file.open(STUDENT_FILE_PATH);
-	
+
 	char buffer[512 + 1];
 	*amount = 0;
 	bool isReadingStudent = false;
@@ -229,7 +226,7 @@ Student* LoadStudents(int* amount)
 
 		//seperators are double the amout of students
 		separators /= 2;
-		
+
 		*amount = separators;
 		Student* students = new Student[*amount];
 		int i = 0;
@@ -242,52 +239,34 @@ Student* LoadStudents(int* amount)
 			if (strcmp(buffer, "[----]") == 0)
 			{
 				isReadingStudent = !isReadingStudent;
-				}
+			}
 			if (isReadingStudent)
 			{
 				file.getline(buffer, 512);
-				
 				strncpy_s(students[i].Name, buffer, MAX_NAME_LENGTH);
-				//students[i].Name[MAX_NAME_LENGTH] = '\0';
+
 				file.getline(buffer, 512);
-				
 				strncpy_s(students[i].Id, buffer, STUDENT_ID_LENGTH);
-				//students[i].Id[STUDENT_ID_LENGTH] = '\0';
+
 				file.getline(buffer, 512);
-				
 				strncpy_s(students[i].NationalId, buffer, NATIONAL_ID_LENGTH);
-				//students[i].NationalId[NATIONAL_ID_LENGTH] = '\0';
+
 				file.getline(buffer, 512);
-				
 				students[i].Gender = buffer[0];
+
 				file.getline(buffer, 512);
-				
-				char dateBuffer[5];
-				strncpy_s(dateBuffer, buffer, 2);
-				dateBuffer[2] = '\0';
+				strncpy_s(students[i].BirthDate, buffer, DATE_LENGTH);
 
-				students[i].DayBirth = atoi(dateBuffer);
-				strncpy_s(dateBuffer, &buffer[3], 2);
-				dateBuffer[2] = '\0';
-
-				students[i].MonthBirth = atoi(dateBuffer);
-				strncpy_s(dateBuffer, &buffer[6], 4);
-				//dateBuffer[4] = '\0';
-
-				students[i].YearBirth = atoi(dateBuffer);
 				file.getline(buffer, 512);
-				
 				strncpy_s(students[i].PhoneNumber, buffer, PHONE_NUM_LENGTH);
-				//students[i].PhoneNumber[PHONE_NUM_LENGTH] = '\0';
-				file.getline(buffer, 512);
-				
 
-				students[i].Gpa = std::stof(buffer);
 				file.getline(buffer, 512);
-				
+				students[i].Gpa = atof(buffer);
+
+				file.getline(buffer, 512);
 				students[i].Level = atoi(buffer);
+
 				file.getline(buffer, 512);
-				
 				students[i].Program = (Programs)atoi(buffer);
 
 				i++;
@@ -305,23 +284,23 @@ Student* LoadStudents(int* amount)
 
 }
 
-void AddStudent(const Student student) 
+void AddStudent(const Student student)
 {
 	AppendStudent(student);
 }
 
-void DeleteStudent(int index,Student* students,int *amount)
+void DeleteStudent(int index, Student* students, int* amount)
 {
 	if (index >= *amount)
 		return;
 	else {
-		for (int i = index; i < (*amount -1); i++)
+		for (int i = index; i < (*amount - 1); i++)
 			students[i] = students[i + 1];
 		*amount = *amount - 1;
 	}
 
 }
-void UpdateStudent(Student* student,const char* name,const char* phone,Programs program,int level)
+void UpdateStudent(Student* student, const char* name, const char* phone, Programs program, int level)
 {
 	//strncpy_s(student->Id, id, ID_LENGTH);
 	//student->Id[ID_LENGTH] = '\0';
