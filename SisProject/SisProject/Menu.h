@@ -17,10 +17,10 @@ int MainMenu();
 void PrintStudent(const Student s);
 
 void ListStudents(Student* students, int amount);
-void AddNewStudent(Student* students, int amount);
+void AddStudentMenu(Student* students, int amount);
 void SearchStudents(Student* students, int amount);
-void DeleteStudent(Student* students, int *amount);
-void UpdateStudent(Student*students,int amount);
+void DeleteStudentMenu(Student* students, int *amount);
+void UpdateStudentMenu(Student*students,int amount);
 int StudentManagementMenu();
 int CourseManagementMenu();
 int GradesManagementMenu();

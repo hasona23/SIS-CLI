@@ -165,7 +165,7 @@ void ListStudents(Student* students, int amount)
 	std::cin.get();
 }
 
-void AddNewStudent(Student* students, int amount)
+void AddStudentMenu(Student* students, int amount)
 {
 	Student student{};
 
@@ -445,7 +445,7 @@ void SearchStudents(Student* students, int amount)
 	PressEnterPause();
 
 }
-void DeleteStudent(Student* students, int* amount)
+void DeleteStudentMenu(Student* students, int* amount)
 {
 	for (int i = 0; i < *amount; i++)
 	{
@@ -485,7 +485,7 @@ void DeleteStudent(Student* students, int* amount)
 	DeleteStudent(removeIndex, students, amount);
 
 }
-void UpdateStudent(Student* students, int amount)
+void UpdateStudentMenu(Student* students, int amount)
 {
 	for (int i = 0; i < amount; i++)
 	{
@@ -598,14 +598,14 @@ int StudentManagementMenu() {//studmng menu
 
 		switch (choice) {
 		case 1:
-			AddNewStudent(students, amount);
+			AddStudentMenu(students, amount);
 			break;
 		case 2:
 			SearchStudents(students, amount);
 			break;
-		case 3:UpdateStudent(students, amount);
+		case 3:UpdateStudentMenu(students, amount);
 			break;
-		case 4: DeleteStudent(students, &amount);
+		case 4: DeleteStudentMenu(students, &amount);
 			break;
 		case 5: ListStudents(students, amount);
 			break;
