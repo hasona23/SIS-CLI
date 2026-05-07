@@ -248,34 +248,87 @@ void AddNewStudent(Student* students, int amount)
 
 void SearchStudents(Student* students, int amount)
 {
-	std::string searchName = "";
+	std::string searchName;
 	std::string searchId = "";
 	std::string searchNationalId = "";
 	std::string searchPhoneNumber = "";
-
-	std::cout << "Enter Id (enter 0 to ignore): \n";
+	std::cin.ignore();
+	std::cout << "Enter Name (enter 0 to ignore): \n";
+	std::getline(std::cin,searchName,'\n');
+	while (searchName != "0" && !ValidateName(searchName.c_str()))
+	{
+		std::cout << "Invalid NAME [" << searchName << "]. format [FirstName] [LastName] or enter back to continue\n";
+		std::cout << "Enter Name: ";
+		std::getline(std::cin,searchName,'\n');
+		if (searchName == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	std::cout << "Enter ID (enter 0 to ignore): \n";
 	std::cin >> searchId;
-	std::cout << "Enter name (enter 0 to ignore): \n";
-	std::cin >> searchName;
-	std::cout << "Enter NationalId (enter 0 to ignore): \n";
+	while (searchId != "0" && !ValidateStudentId(searchId.c_str()))
+	{
+		std::cout << "Invalid ID [" << searchId << "]. format 25PXXXX or enter back to continue\n";
+		std::cout << "Enter ID: ";
+		std::cin >> searchId;
+		if (searchId == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	
+	std::cout << "Enter NationalID (enter 0 to ignore): \n";
 	std::cin >> searchNationalId;
+	while (searchNationalId != "0" && !ValidateNationalId(searchNationalId.c_str()))
+	{
+		std::cout << "Invalid NationalID [" << searchNationalId << "].Enter "<<NATIONAL_ID_LENGTH<<" digits or enter back to continue\n";
+		std::cout << "Enter NationalID: ";
+		std::cin >> searchNationalId;
+		if (searchNationalId == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
 	std::cout << "Enter phoneNumber (enter 0 to ignore): \n";
 	std::cin >> searchPhoneNumber;
-	std::cout << "Amount: " << amount << '\n';
+	while (searchPhoneNumber != "0" && !ValidatePhoneNumber(searchPhoneNumber.c_str()))
+	{
+		std::cout << "Invalid PhoneNumber [" << searchPhoneNumber << "]. format 01 + 9 digits or enter back to continue\n";
+		std::cout << "Enter phone number: ";
+		std::cin >> searchPhoneNumber;
+		if (searchPhoneNumber == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	
+	int countFound = 0;
 	for (int i = 0; i < amount; i++)
 	{
 		bool nameFilter = (searchName == "0" || (searchName == students[i].Name));
 		bool idFilter = (searchId == "0" || (searchId == students[i].Id));
 		bool phoneFilter = (searchPhoneNumber == "0" || (searchPhoneNumber == students[i].PhoneNumber));
 		bool nationalIdFilter = (searchNationalId == "0" || (searchNationalId == students[i].NationalId));
-		if (nameFilter && idFilter && phoneFilter && nationalIdFilter)
+		if (nameFilter && idFilter && phoneFilter && nationalIdFilter) {
 			PrintStudent(students[i]);
+			countFound++;
+		}
 	}
-	std::cout << "Press Enter to conitnue..";
-	while (std::cin.get() != '\n')
+	if (countFound == 0)
 	{
+		std::cout << "No Students where found with criteria\n";
 	}
-	std::cin.ignore();
+	PressEnterPause();
+	
 }
 void DeleteStudent(Student* students, int* amount)
 {

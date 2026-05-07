@@ -164,7 +164,7 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 	file << student.Id << '\n';
 	file << student.NationalId << '\n';
 	file << student.Gender << '\n';
-	file << student.BirthDate;
+	file << student.BirthDate<<'\n';
 	file << student.PhoneNumber << '\n';
 	file << student.Gpa << '\n';
 
