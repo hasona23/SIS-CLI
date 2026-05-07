@@ -617,8 +617,8 @@ int StudentManagementMenu() {//studmng menu
 		}
 		if (choice != 1) {
 			SortStudentsById(students, amount);
-			SaveStudents(students, amount);
-		}delete[] students;
+			SaveStudents(students, amount);}
+		delete[] students;
 
 	}
 
@@ -626,33 +626,52 @@ int StudentManagementMenu() {//studmng menu
 }
 
 int CourseManagementMenu() {//course management menu
-	for (int i = 0; i < 3; i++) cout << "=";
-	cout << " " << "Course Management" << " ";
-	for (int i = 0; i < 3; i++) cout << "=";
-	cout << '\n' << '\n';
-	cout << "1. Add New Course" << '\n' << "2. View All Courses" << '\n' << "3. Update Course" << '\n' << "4. Delete Course" << '\n';;
-	cout << "5. Back to Main Menu";
-	cout << '\n' << '\n';
 
-	int choice = 0; bool valid = false;
-	while (!valid) {
+	int choice = 0;
+
+	while (choice != 5) {
+		system("cls");
+		for (int i = 0; i < 3; i++) cout << "=";
+		cout << " " << "Course Management" << " ";
+		for (int i = 0; i < 3; i++) cout << "=";
+		cout << '\n' << '\n';
+		cout << "1. Add New Course" << '\n' << "2. View All Courses" << '\n' << "3. Update Course" << '\n' << "4. Delete Course" << '\n';;
+		cout << "5. Back to Main Menu";
+		cout << '\n' << '\n';
+
+
+
 		cout << "Enter your choice: ";
+		
+		Course* courses = nullptr;
+		int amount = 0;
+
+		courses = LoadCourses(&amount);
 		cin >> choice;
+		cin.ignore(); //eyad added this
 		switch (choice) {
-		case 1:valid = true;
+		case 1:addCourse();
 			break;
-		case 2:valid = true;
+		case 2:
 			break;
-		case 3:valid = true;
+		case 3:
 			break;
-		case 4: valid = true; break;
-		case 5: return -1;
+		case 4:  DeleteCourseMenu(courses, &amount);
+			break;
+		case 5: cout << "Going back to main menu.\n";
+
+			break;
 		default:choice = 0;
 			cout << "Invalid input, please try again" << '\n';
-			valid = false;
 
+
+
+
+		}if (choice != 1) {
+			
+			SaveCourses(courses, amount);
 		}
-
+		delete[] courses;
 	}
 
 	return choice;
