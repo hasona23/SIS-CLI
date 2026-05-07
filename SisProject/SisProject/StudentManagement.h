@@ -8,7 +8,7 @@ static const int NATIONAL_ID_LENGTH = 14;
 static const int PHONE_NUM_LENGTH = 11;
 static const char* PHONE_NUM_PREFIX = "01";
 static const int MIN_AGE = 17;
-static const char* STUDENT_FILE_PATH = "./stduent.txt";
+static const char* STUDENT_FILE_PATH = "./student.txt";
 static const int MAX_NAME_LENGTH = 256;
 static const int DATE_LENGTH = 10;
 
@@ -28,16 +28,16 @@ enum Programs
 struct Student
 {
 public:
-	char Id[STUDENT_ID_LENGTH + 1];
-	char Name[MAX_NAME_LENGTH + 1];
-	char NationalId[NATIONAL_ID_LENGTH + 1];
-	char PhoneNumber[PHONE_NUM_LENGTH + 1];
-	char Gender;
-	Programs Program;
-	int Level; // 1-4
+	char Id[STUDENT_ID_LENGTH + 1] = "";
+	char Name[MAX_NAME_LENGTH + 1] = "";
+	char NationalId[NATIONAL_ID_LENGTH + 1] = "";
+	char PhoneNumber[PHONE_NUM_LENGTH + 1] = "";
+	char Gender = MALE_GENDER;
+	Programs Program = MCTA;
+	int Level = 1; // 1-4
 	float Gpa = 0.0;
 
-	char BirthDate[DATE_LENGTH + 1];
+	char BirthDate[DATE_LENGTH + 1] = "";
 };
 
 

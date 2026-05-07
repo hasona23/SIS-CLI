@@ -84,8 +84,124 @@ Programs GetProgram()
 	return (Programs)choice;
 }
 
+static int GetIdDigits(const char* id)
+{
+	int start = 3;
+	int amount = 0;
+	int power = 4;
+	for (int i = start; i < strlen(id); i++)
+	{
+		amount += atoi(&id[i]) * std::pow(10, power--);
+	}
+	return amount;
+}
+
+static void SortStudentsById(Student* students, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+			if (strcmp(students[j].Id, students[j + 1].Id) > 0)
+			{
+				Student temp = students[j];
+				students[j] = students[j + 1];
+				students[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+static void SortStudentsByGpa(Student* students, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+
+			if (students[j].Gpa < students[j + 1].Gpa)
+			{
+				Student temp = students[j];
+				students[j] = students[j + 1];
+				students[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+static void SortStudentsByName(Student* students, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+
+			if (strcmp(students[j].Name, students[j + 1].Name) > 0)
+			{
+				Student temp = students[j];
+				students[j] = students[j + 1];
+				students[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+
+static void SortStudentsByNationalId(Student* students, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+
+			if (strcmp(students[j].NationalId, students[j + 1].NationalId) > 0)
+			{
+				Student temp = students[j];
+				students[j] = students[j + 1];
+				students[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
 void ListStudents(Student* students, int amount)
 {
+	DisplayTitle("Student List");
+	std::cout << "Choose Sorting Method: \n";
+	std::cout << "1) Id\n";
+	std::cout << "2) Name\n";
+	std::cout << "3) GPA\n";
+	std::cout << "4) National Id\n";
+	int choice = 0;
+	do
+	{
+		std::cout << "Choice: ";
+		std::cin >> choice;
+	} while (choice < 1 || choice > 4);
+	switch (choice)
+	{
+	case 2:
+		SortStudentsByName(students, amount);
+		break;
+	case 3:
+		SortStudentsByGpa(students, amount);
+		break;
+	case 4:
+		SortStudentsByNationalId(students, amount);
+		break;
+	default:
+		SortStudentsById(students, amount);
+		break;
+	}
 	for (int i = 0; i < amount; i++)
 	{
 		PrintStudent(students[i]);
@@ -272,7 +388,7 @@ void AddNewStudent(Student* students, int amount)
 		PressEnterPause();
 	}
 	std::string newIdStr = std::to_string(maxId);
-	int missingPaddingZeroes = 4 - newIdStr.length() ;
+	int missingPaddingZeroes = 4 - newIdStr.length();
 	for (int i = 0; i < missingPaddingZeroes; i++)
 	{
 		newIdStr = "0" + newIdStr;
@@ -293,12 +409,12 @@ void SearchStudents(Student* students, int amount)
 	std::string searchPhoneNumber = "";
 	std::cin.ignore();
 	std::cout << "Enter Name (enter 0 to ignore): \n";
-	std::getline(std::cin,searchName,'\n');
+	std::getline(std::cin, searchName, '\n');
 	while (searchName != "0" && !ValidateName(searchName.c_str()))
 	{
 		std::cout << "Invalid NAME [" << searchName << "]. format [FirstName] [LastName] or enter back to continue\n";
 		std::cout << "Enter Name: ";
-		std::getline(std::cin,searchName,'\n');
+		std::getline(std::cin, searchName, '\n');
 		if (searchName == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -322,13 +438,13 @@ void SearchStudents(Student* students, int amount)
 			return;
 		}
 	}
-	
+
 	std::cout << "Enter NationalID (enter 0 to ignore): \n";
 	std::cin >> searchNationalId;
 	RemoveSpaces(searchNationalId);
 	while (searchNationalId != "0" && !ValidateNationalId(searchNationalId.c_str()))
 	{
-		std::cout << "Invalid NationalID [" << searchNationalId << "].Enter "<<NATIONAL_ID_LENGTH<<" digits or enter back to continue\n";
+		std::cout << "Invalid NationalID [" << searchNationalId << "].Enter " << NATIONAL_ID_LENGTH << " digits or enter back to continue\n";
 		std::cout << "Enter NationalID: ";
 		std::cin >> searchNationalId;
 		RemoveSpaces(searchNationalId);
@@ -355,7 +471,7 @@ void SearchStudents(Student* students, int amount)
 			return;
 		}
 	}
-	
+
 	int countFound = 0;
 	for (int i = 0; i < amount; i++)
 	{
@@ -373,7 +489,7 @@ void SearchStudents(Student* students, int amount)
 		std::cout << "No Students where found with criteria\n";
 	}
 	PressEnterPause();
-	
+
 }
 void DeleteStudent(Student* students, int* amount)
 {
@@ -381,17 +497,39 @@ void DeleteStudent(Student* students, int* amount)
 	{
 		std::cout << (i + 1) << ") " << students[i].Id << " - " << students[i].Name << '\n';
 	}
-	int index = -1;
-	while (index < 0 || index > *amount)
+	std::string inputId = "";
+	bool wasFound = false;
+	int removeIndex = -1;
+	do
 	{
-		std::cout << "Enter index(" << 1 << "-" << *amount << ") or zero to exit: ";
-		std::cin >> index;
-	}
-	index--;
-	if (index >= 0)
-	{
-		DeleteStudent(index, students, amount);
-	}
+		std::cout << "Input ID (back to exit): ";
+		std::cin >> inputId;
+		if (inputId == "back")
+			return;
+		if (!ValidateStudentId(inputId.c_str()))
+		{
+			std::cout << "Invalid input Id\n";
+			continue;
+		}
+		wasFound = false;
+		for (int i = 0; i < *amount; i++)
+		{
+			if (strcmp(students[i].Id, inputId.c_str()) == 0)
+			{
+				wasFound = true;
+				removeIndex = i;
+				break;
+			}
+		}
+		if (!wasFound)
+		{
+			std::cout << "Student with id" << inputId << " not found\n";
+		}
+	} while (!ValidateStudentId(inputId.c_str()) || !wasFound);
+
+
+	DeleteStudent(removeIndex, students, amount);
+
 }
 void UpdateStudent(Student* students, int amount)
 {
@@ -400,25 +538,47 @@ void UpdateStudent(Student* students, int amount)
 		std::cout << (i + 1) << ") " << students[i].Id << " - " << students[i].Name << '\n';
 	}
 	int index = -1;
-	while (index < 0 || index > amount)
+	std::string inputId = "";
+	bool wasFound = false;
+	do
 	{
-		std::cout << "Enter index(" << 1 << "-" << amount << ") or zero to exit: ";
-		std::cin >> index;
-	}
-	index--;
+		std::cout << "Input ID (back to exit): ";
+		std::cin >> inputId;
+		if (inputId == "back")
+			return;
+		if (!ValidateStudentId(inputId.c_str()))
+		{
+			std::cout << "Invalid input Id\n";
+			continue;
+		}
+		wasFound = false;
+		for (int i = 0; i < amount; i++)
+		{
+			if (strcmp(students[i].Id, inputId.c_str()) == 0)
+			{
+				wasFound = true;
+				index = i;
+				break;
+			}
+		}
+		if (!wasFound)
+			std::cout << "student with id " << inputId << " not found\n";
+	} while (!ValidateStudentId(inputId.c_str()) || !wasFound);
 	std::string newName;
 	std::string newPhone;
 	Programs program = MCTA;
 	int level;
 
-	std::cin.ignore();
+
 	std::cout << "Enter new name or 0 to skip: ";
+	std::cin.ignore();
 	std::getline(std::cin, newName);
+	
 	while (newName != "0" && !ValidateName(newName.c_str()))
 	{
 		std::cout << "Invalid NAME [" << newName << "]. format [FirstName] [LastName] or enter back to continue\n";
 		std::cout << "Enter Name: ";
-		std::getline(std::cin, newName, '\n');
+		std::getline(std::cin, newName);
 		if (newName == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -458,8 +618,8 @@ void UpdateStudent(Student* students, int amount)
 	std::cin >> level;
 
 
-	if (index >= 0)
-		UpdateStudent(&students[index], newName.c_str(), newPhone.c_str(), program, level);
+
+	UpdateStudent(&students[index], newName.c_str(), newPhone.c_str(), program, level);
 }
 int StudentManagementMenu() {//studmng menu
 
@@ -504,6 +664,7 @@ int StudentManagementMenu() {//studmng menu
 			choice = 0;
 		}
 		if (choice != 1) {
+			SortStudentsById(students, amount);
 			SaveStudents(students, amount);
 		}delete[] students;
 
