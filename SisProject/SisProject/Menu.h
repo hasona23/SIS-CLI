@@ -8,15 +8,9 @@ using namespace std;
 /* strlen() char centered + a tab on both sides which is 14*/
 
 
-static const char ASCII_BOTTOM_RIGHT_CORNER = 188;
-static const char ASCII_TOP_LEFT_CORNER = 201;
-static const char ASCII_TOP_RIGHT_CORNER = 187;
-static const char ASCII_VERTICAL_LINE = 186;
-static const char ASCII_HORIZONTAL_LINE = 205;
-static const char ASCII_BOTTOM_LEFT_CORNER = 200;
+
 
 //Displays the bordered title using ASCII Art
-void DisplayTitle(const char title[]);
 
 Programs GetProgram();
 int MainMenu();

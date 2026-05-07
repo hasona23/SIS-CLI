@@ -284,10 +284,6 @@ Student* LoadStudents(int* amount)
 
 }
 
-void AddStudent(const Student student)
-{
-	AppendStudent(student);
-}
 
 void DeleteStudent(int index, Student* students, int* amount)
 {

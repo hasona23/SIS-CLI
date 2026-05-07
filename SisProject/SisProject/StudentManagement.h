@@ -62,7 +62,5 @@ void CreateStudentFile();
 //MUST FREE MEMORY STUDENTS at the end
 Student* LoadStudents(int* amount);
 //STUDENT CRUD =======================================
-void AddStudent(const Student student);
-
 void DeleteStudent(int index, Student* students,int *amount);
 void UpdateStudent(Student* student,const char* name, const char* phone, Programs program, int level);

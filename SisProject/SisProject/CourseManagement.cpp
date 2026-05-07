@@ -2,6 +2,10 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include "Utils.h"
+using namespace std;
+
+
 
 
 void CreateCoursesFile()
@@ -20,19 +24,19 @@ void CreateCoursesFile()
 
 }
 
-void WriteCourseToFile(const Course* course,std::ofstream& file)
+void WriteCourseToFile(const Course* course, std::ofstream& file)
 {
 	file << "[----]\n";
-	file << course->ID << '\n';
+	file << course->Id << '\n';
 	file << course->Title << '\n';
-	file << course->CreditHours<<'\n';
+	file << course->CreditHours << '\n';
 	file << "[----]\n";
 }
 
 void SaveCourses(const Course* courses, int amount)
 {
 	std::ofstream file;
-	file.open(COURSES_FILE_PATH,std::ios::trunc);
+	file.open(COURSES_FILE_PATH, std::ios::trunc);
 	if (file.is_open())
 	{
 		for (int i = 0; i < amount; i++)
@@ -84,7 +88,7 @@ Course* LoadCourses(int* amount)
 		file.seekg(0, std::ios::beg);
 		while (file.getline(buffer, 512))
 		{
-			
+
 
 			if (strcmp(buffer, "[----]") == 0)
 			{
@@ -94,7 +98,7 @@ Course* LoadCourses(int* amount)
 			{
 				file.getline(buffer, 512);
 
-				strncpy_s(courses[i].ID, buffer, COURSE_ID_LENGTH);
+				strncpy_s(courses[i].Id, buffer, COURSE_ID_LENGTH);
 				//courses[i].ID[COURSE_ID_LENGTH] = '\0';
 				file.getline(buffer, 512);
 
@@ -115,4 +119,96 @@ Course* LoadCourses(int* amount)
 		std::cout << "Error Opening file to load\n";
 		return nullptr;
 	}
+}
+
+
+
+
+//All below this point was created by eyad, saying that to distinguish pieces of code
+
+//receive input of courses
+int validateCourseId(Course* course) { //3 letters, 3 digits, unique
+	RemoveSpaces(course[0].Id);
+
+
+
+
+	//will check by searching through the courses file, so I will need a search course func 
+	//or use strcmp with other course names in the courses file which are marked by a specific line pattern in the courses.txt
+
+
+	if (strlen(course[0].Id) != 6) return -1;
+
+	for (int i = 0; i < 3; i++) {
+		if (course[0].Id[i] >= 'a' && course[0].Id[i] <= 'z') {
+			course[0].Id[i] -= 32;
+
+		}
+		if (course[0].Id[i] < 'A' || course[0].Id[i] > 'Z') return -2;
+	}
+	for (int i = 3; course[0].Id[i] != '\0'; i++) {
+		if (course[0].Id[i] < '0' || course[0].Id[i] > '9')return -3;
+	}
+	fstream file;
+	file.open(COURSES_FILE_PATH);
+	char buffer[512 + 1];
+	if (file.is_open()) {
+		int separatorDist = 0;
+		while (file.getline(buffer, 512)) {
+			if (strcmp("[----]", buffer) == 0) separatorDist = 0;
+			else separatorDist++;
+			if (separatorDist == 1) {
+				if (strcmp(buffer, course[0].Id) == 0) return -4;
+			}
+		}
+	}
+
+	return 0;
+}
+bool validateCourseTitle(const Course course) {
+
+	if (strlen(course.Title) == 0)return false;
+}
+
+bool validateCreditHrs(const Course course) {
+	if (course.CreditHours != 1 && course.CreditHours != 2 && course.CreditHours != 3 && course.CreditHours != 4) return false;
+	return true;
+}
+
+
+void addCourse() {//will ultimately be called add course and then will be given to the func that writes into files
+	Course course;
+	std::cout << "Enter course Id: ";
+	cin.getline(course.Id, 256);
+	while (validateCourseId(&course) != 0) {
+		switch (validateCourseId(&course)) {
+		case -1: cout << "Invalid course ID length, must only be 6 characters." << endl << "Enter course ID: ";
+			break;
+		case -2:cout << "Invalid course ID format, must be 3 letters then 3 digits." << endl << "Enter course ID: ";
+			break;
+		case -3:cout << "Invalid courseId format, must be 3 letters then 3 digits." << endl << "Enter course ID: ";
+			break;
+		case -4: cout << "A course with this code already exists.Please try again." << endl << "Enter course ID: ";
+			break;
+		}cin.getline(course.Id, 256);
+		cout << endl;
+	}
+	cout << endl << "Enter course name: ";
+	cin.getline(course.Title, 256); cout << endl;
+	while (!validateCourseTitle(course)) {
+		cout << "Course Name cannot be empty. Please try again." << endl << "Enter course name: ";
+		cin.getline(course.Title, 256);
+		cout << endl;
+	}
+	cout << "Enter credit hrs: ";
+	cin >> course.CreditHours;
+	while (!validateCreditHrs(course)) {
+		cout << "Invalid Credit Hours. Credit hours are 1,2,3,or 4" << endl << "Enter credit hrs: ";
+		cin >> course.CreditHours;
+		cout << endl;
+	}
+	AppendCourse(&course);
+
+
+
 }
