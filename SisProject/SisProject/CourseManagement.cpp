@@ -7,11 +7,7 @@ using namespace std;
 
 
 
-void toUpper(char* prompt) {
-	for (int i = 0; prompt[i] != '\0'; i++) {
-		if (prompt[i] >= 'a' && prompt[i] <= 'z') prompt[i] -= 32;
-	}
-}
+
 void CreateCoursesFile()
 {
 	std::fstream file;
