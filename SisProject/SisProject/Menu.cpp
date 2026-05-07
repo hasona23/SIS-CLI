@@ -369,13 +369,35 @@ void UpdateStudent(Student* students, int amount)
 	std::cin.ignore();
 	std::cout << "Enter new name or 0 to skip: ";
 	std::getline(std::cin, newName);
-
+	while (newName != "0" && !ValidateName(newName.c_str()))
+	{
+		std::cout << "Invalid NAME [" << newName << "]. format [FirstName] [LastName] or enter back to continue\n";
+		std::cout << "Enter Name: ";
+		std::getline(std::cin, newName, '\n');
+		if (newName == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
 	if (newName == "0")
 		newName = students[index].Name;
 	std::cin.ignore();
 	std::cout << "Enter new Phone number or 0 to skip: ";
 	std::cin >> newPhone;
-
+	while (newPhone != "0" && !ValidatePhoneNumber(newPhone.c_str()))
+	{
+		std::cout << "Invalid PhoneNumber [" << newPhone << "]. format 01 + 9 digits or enter back to continue\n";
+		std::cout << "Enter phone number: ";
+		std::cin >> newPhone;
+		if (newPhone == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
 	if (newPhone == "0")
 		newPhone = students[index].PhoneNumber;
 
@@ -384,7 +406,7 @@ void UpdateStudent(Student* students, int amount)
 	if (tolower(std::cin.get()) == 'y')
 		program = GetProgram();
 
-	std::cin.ignore();
+	//std::cin.ignore();
 	std::cout << "Enter new level or 0 to skip: ";
 	std::cin >> level;
 
