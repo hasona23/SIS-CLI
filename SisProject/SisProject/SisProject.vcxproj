@@ -138,6 +138,7 @@
     <ClInclude Include="GradesManagement.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="StudentManagement.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

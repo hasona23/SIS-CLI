@@ -1,4 +1,7 @@
 #pragma once
+#include <iostream>
+using namespace std;
+
 
 static const char ASCII_BOTTOM_RIGHT_CORNER = 188;
 static const char ASCII_TOP_LEFT_CORNER = 201;
