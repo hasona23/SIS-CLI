@@ -3,7 +3,7 @@
 #include <iostream>,<conio.h>,<cstring>
 #include <iomanip>
 #include "StudentManagement.h"
-
+#include "CourseManagement.h"
 using namespace std;
 /* strlen() char centered + a tab on both sides which is 14*/
 
@@ -24,10 +24,10 @@ void UpdateStudentMenu(Student*students,int amount);
 int StudentManagementMenu();
 int CourseManagementMenu();
 int GradesManagementMenu();
-
+void addCourse();
 int RunSis();
-
-
+void DeleteCourseMenu(Course* courses, int* amount);
+void DeleteCourse(int index, Course* courses, int* amount);
 
 
 
