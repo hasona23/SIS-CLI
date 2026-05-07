@@ -7,7 +7,14 @@ using namespace std;
 
 
 
+void toUpper(char* prompt) {
+	for (int i = 0; prompt[i] != '\0'; i++) {
+		if (prompt[i] >= 'a' && prompt[i] <= 'z') prompt[i] -= 32;
+	}
 
+
+
+}
 void CreateCoursesFile()
 {
 	std::fstream file;
@@ -61,7 +68,7 @@ void AppendCourse(const Course* course)
 }
 Course* LoadCourses(int* amount)
 {
-	std::ifstream file;
+	fstream file;
 	file.open(COURSES_FILE_PATH);
 
 	char buffer[512 + 1];
@@ -210,5 +217,65 @@ void addCourse() {//will ultimately be called add course and then will be given 
 	AppendCourse(&course);
 
 
+
+}
+
+
+void DeleteCourse(int index, Course* courses, int* amount)
+{
+	if (index >= *amount)
+		return;
+	else {
+		for (int i = index; i < (*amount - 1); i++)
+			courses[i] = courses[i + 1];
+		*amount = *amount - 1;
+	}
+
+}
+void DeleteCourseMenu(Course* courses, int* amount)
+{
+	for (int i = 0; i < *amount; i++)
+	{
+		std::cout << (i + 1) << ") " << courses[i].Id << " - " << courses[i].Title << '\n';
+	}
+	char inputId[256]="";
+	bool wasFound = false;
+	int removeIndex = -1;
+	do
+	{
+		Course tempCourse;
+	
+
+		std::cout << "Input ID (back to exit): ";
+		cin.getline(inputId, 256);
+		RemoveSpaces(inputId);
+		toUpper(inputId);
+		
+		strcpy_s(tempCourse.Id, inputId);
+		if (strcmp(tempCourse.Id,"BACK") ==0)
+			return;
+		if (!validateCourseId(&tempCourse))
+		{
+			std::cout << "Invalid input Id\n";
+			continue;
+		}
+		wasFound = false;
+		for (int i = 0; i < *amount; i++)
+		{
+			if (strcmp(courses[i].Id, tempCourse.Id) == 0)
+			{
+				wasFound = true;
+				removeIndex = i;
+				break;
+			}
+		}
+		if (!wasFound)
+		{
+			std::cout << "Course with id " << inputId << " was not found\n";
+		}
+	} while (!wasFound);
+
+
+	DeleteCourse(removeIndex, courses, amount);
 
 }
