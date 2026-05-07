@@ -3,20 +3,19 @@
 #include "Utils.h"
 
 
-void PrintStudent(const Student s) {
+static void PrintStudent(const Student* s) {
 	std::cout << "========================\n";
-	std::cout << "ID           : " << s.Id << "\n";
-	std::cout << "Name         : " << s.Name << "\n";
-	std::cout << "National ID  : " << s.NationalId << "\n";
-	std::cout << "Phone        : " << s.PhoneNumber << "\n";
-	std::cout << "Gender       : " << s.Gender << "\n";
-	std::cout << "Program      : " << ProgramsStr[s.Program-1] << "\n";
-	std::cout << "Level        : " << s.Level << "\n";
-	std::cout << "GPA          : " << s.Gpa << "\n";
-	std::cout << "Birthdate    : " << s.BirthDate << "\n";
+	std::cout << "ID           : " << s->Id << "\n";
+	std::cout << "Name         : " << s->Name << "\n";
+	std::cout << "National ID  : " << s->NationalId << "\n";
+	std::cout << "Phone        : " << s->PhoneNumber << "\n";
+	std::cout << "Gender       : " << s->Gender << "\n";
+	std::cout << "Program      : " << ProgramsStr[s->Program-1] << "\n";
+	std::cout << "Level        : " << s->Level << "\n";
+	std::cout << "GPA          : " << s->Gpa << "\n";
+	std::cout << "Birthdate    : " << s->BirthDate << "\n";
 	std::cout << "========================\n";
 }
-
 
 
 Programs GetProgram()

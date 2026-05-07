@@ -14,7 +14,7 @@ using namespace std;
 
 Programs GetProgram();
 int MainMenu();
-void PrintStudent(const Student s);
+void PrintStudent(const Student* s);
 
 void ListStudents(Student* students, int amount);
 void AddStudentMenu(Student* students, int amount);
