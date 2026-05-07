@@ -10,7 +10,7 @@ void PrintStudent(const Student s) {
 	std::cout << "National ID  : " << s.NationalId << "\n";
 	std::cout << "Phone        : " << s.PhoneNumber << "\n";
 	std::cout << "Gender       : " << s.Gender << "\n";
-	std::cout << "Program      : " << s.Program << "\n";
+	std::cout << "Program      : " << ProgramsStr[s.Program-1] << "\n";
 	std::cout << "Level        : " << s.Level << "\n";
 	std::cout << "GPA          : " << s.Gpa << "\n";
 	std::cout << "Birthdate    : " << s.BirthDate << "\n";
@@ -21,8 +21,6 @@ void PrintStudent(const Student s) {
 
 Programs GetProgram()
 {
-	static const char* ProgramsStr[] = { "MCTA" ,"CSE","CCE","ENRGY","COMM" };
-
 	std::cout << "Choose Program: \n";
 	for (int i = 1; i <= (int)Programs::COMM; i++)
 	{

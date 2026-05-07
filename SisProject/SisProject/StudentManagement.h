@@ -14,6 +14,8 @@ static const int DATE_LENGTH = 10;
 
 static const int MAX_LEVEL = 4;
 static const int MIN_LEVEL = 1;
+
+static const char* ProgramsStr[] = { "MCTA","CSE","CCE","ENRGY","COMM" };
 enum Programs
 {
 	MCTA = 1,
