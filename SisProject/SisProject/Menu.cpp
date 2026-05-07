@@ -1,7 +1,35 @@
 #include "Menu.h"
 #include <string>
 
-void PressEnterPause()
+static void RemoveSpaces(char* str)
+{
+	for (int i = 0; i < strlen(str); i++)
+	{
+		if (str[i] == ' ')
+		{
+			for (int j = i; j < strlen(str); j++)
+			{
+				str[j] = str[j + 1];
+			}
+			i--;
+		}
+	}
+}
+static void RemoveSpaces(std::string str)
+{
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == ' ')
+		{
+			for (int j = i; j < str.length(); j++)
+			{
+				str[j] = str[j + 1];
+			}
+			i--;
+		}
+	}
+}
+static void PressEnterPause()
 {
 	std::cout << "Press Enter to Continue...";
 	std::cin.ignore();
@@ -82,7 +110,8 @@ void AddNewStudent(Student* students, int amount)
 
 	std::cout << "Enter student second name: ";
 	std::cin >> secondName;
-
+	RemoveSpaces(firstName);
+	RemoveSpaces(secondName);
 	std::string fullName = firstName + " " + secondName;
 	strncpy_s(student.Name, fullName.c_str(), MAX_NAME_LENGTH);
 	student.Name[MAX_NAME_LENGTH] = '\0';
@@ -91,6 +120,7 @@ void AddNewStudent(Student* students, int amount)
 		std::cout << "Invalid Name [" << student.Name << "]. Enter in format [FirstName] [SecondName] or back to exit \n\n";
 		std::cout << "Enter student first name: ";
 		std::cin >> firstName;
+		RemoveSpaces(firstName);
 		if (firstName == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -100,6 +130,7 @@ void AddNewStudent(Student* students, int amount)
 		//std::cin.ignore();
 		std::cout << "Enter student second name: ";
 		std::cin >> secondName;
+		RemoveSpaces(secondName);
 		if (firstName == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -117,11 +148,13 @@ void AddNewStudent(Student* students, int amount)
 
 	std::cout << "Enter phone number: ";
 	std::cin >> inputBuffer;
+	RemoveSpaces(inputBuffer);
 	while (!ValidatePhoneNumber(inputBuffer.c_str()))
 	{
 		std::cout << "Invalid PhoneNumber [" << inputBuffer << "]. format 01 + 9 digits or enter back to continue\n";
 		std::cout << "Enter phone number: ";
 		std::cin >> inputBuffer;
+		RemoveSpaces(inputBuffer);
 		if (inputBuffer == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -134,6 +167,7 @@ void AddNewStudent(Student* students, int amount)
 
 	std::cout << "Enter national ID: ";
 	std::cin >> inputBuffer;
+	RemoveSpaces(inputBuffer);
 	bool isDuplicateNationalId = false;
 	for (int i = 0; i < amount; i++)
 	{
@@ -150,6 +184,7 @@ void AddNewStudent(Student* students, int amount)
 	{
 		std::cout << "Invalid NationalID [" << inputBuffer << "]. should be of " << NATIONAL_ID_LENGTH << " digits or back to exit \n";
 		std::cin >> inputBuffer;
+		RemoveSpaces(inputBuffer);
 		if (inputBuffer == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -176,10 +211,12 @@ void AddNewStudent(Student* students, int amount)
 
 	std::cout << "Enter Gender(" << MALE_GENDER << " - " << FEMALE_GENDER << "): ";
 	std::cin >> inputBuffer;
+	RemoveSpaces(inputBuffer);
 	while (!ValidateGender(inputBuffer[0]))
 	{
 		std::cout << "Invalid Gender [" << student.Gender << "]. should be (" << MALE_GENDER << " - " << FEMALE_GENDER << ") or back to continue\n";
 		std::cin >> inputBuffer;
+		RemoveSpaces(inputBuffer);
 		if (inputBuffer == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -203,10 +240,12 @@ void AddNewStudent(Student* students, int amount)
 
 	std::cout << "Enter birth (DD/MM/YYYY): ";
 	std::cin >> inputBuffer;
+	RemoveSpaces(inputBuffer);
 	while (!ValidateAge(inputBuffer.c_str()))
 	{
 		std::cout << "Invalid BirthDate [" << inputBuffer << "]. Format DD/MM/YYYY or back to exit \n";
 		std::cin >> inputBuffer;
+		RemoveSpaces(inputBuffer);
 		if (inputBuffer == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -269,11 +308,13 @@ void SearchStudents(Student* students, int amount)
 	}
 	std::cout << "Enter ID (enter 0 to ignore): \n";
 	std::cin >> searchId;
+	RemoveSpaces(searchId);
 	while (searchId != "0" && !ValidateStudentId(searchId.c_str()))
 	{
 		std::cout << "Invalid ID [" << searchId << "]. format 25PXXXX or enter back to continue\n";
 		std::cout << "Enter ID: ";
 		std::cin >> searchId;
+		RemoveSpaces(searchId);
 		if (searchId == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -284,11 +325,13 @@ void SearchStudents(Student* students, int amount)
 	
 	std::cout << "Enter NationalID (enter 0 to ignore): \n";
 	std::cin >> searchNationalId;
+	RemoveSpaces(searchNationalId);
 	while (searchNationalId != "0" && !ValidateNationalId(searchNationalId.c_str()))
 	{
 		std::cout << "Invalid NationalID [" << searchNationalId << "].Enter "<<NATIONAL_ID_LENGTH<<" digits or enter back to continue\n";
 		std::cout << "Enter NationalID: ";
 		std::cin >> searchNationalId;
+		RemoveSpaces(searchNationalId);
 		if (searchNationalId == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -298,11 +341,13 @@ void SearchStudents(Student* students, int amount)
 	}
 	std::cout << "Enter phoneNumber (enter 0 to ignore): \n";
 	std::cin >> searchPhoneNumber;
+	RemoveSpaces(searchPhoneNumber);
 	while (searchPhoneNumber != "0" && !ValidatePhoneNumber(searchPhoneNumber.c_str()))
 	{
 		std::cout << "Invalid PhoneNumber [" << searchPhoneNumber << "]. format 01 + 9 digits or enter back to continue\n";
 		std::cout << "Enter phone number: ";
 		std::cin >> searchPhoneNumber;
+		RemoveSpaces(searchPhoneNumber);
 		if (searchPhoneNumber == "back")
 		{
 			std::cout << "Going back to menu...\n";
@@ -386,11 +431,13 @@ void UpdateStudent(Student* students, int amount)
 	std::cin.ignore();
 	std::cout << "Enter new Phone number or 0 to skip: ";
 	std::cin >> newPhone;
+	RemoveSpaces(newPhone);
 	while (newPhone != "0" && !ValidatePhoneNumber(newPhone.c_str()))
 	{
 		std::cout << "Invalid PhoneNumber [" << newPhone << "]. format 01 + 9 digits or enter back to continue\n";
 		std::cout << "Enter phone number: ";
 		std::cin >> newPhone;
+		RemoveSpaces(newPhone);
 		if (newPhone == "back")
 		{
 			std::cout << "Going back to menu...\n";
