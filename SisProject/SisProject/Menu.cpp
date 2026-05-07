@@ -155,7 +155,7 @@ void ListStudents(Student* students, int amount)
 	}
 	for (int i = 0; i < amount; i++)
 	{
-		PrintStudent(students[i]);
+		PrintStudent(&students[i]);
 	}
 	std::cin.ignore();
 	std::cout << "press enter to continue...";
@@ -347,7 +347,7 @@ void AddStudentMenu(Student* students, int amount)
 	std::string newId = "25P" + newIdStr;
 	std::cout << newId << '\n';
 	strncpy_s(student.Id, newId.c_str(), STUDENT_ID_LENGTH);
-	PrintStudent(student);
+	PrintStudent(&student);
 
 	AppendStudent(student);
 }
@@ -431,7 +431,7 @@ void SearchStudents(Student* students, int amount)
 		bool phoneFilter = (searchPhoneNumber == "0" || (searchPhoneNumber == students[i].PhoneNumber));
 		bool nationalIdFilter = (searchNationalId == "0" || (searchNationalId == students[i].NationalId));
 		if (nameFilter && idFilter && phoneFilter && nationalIdFilter) {
-			PrintStudent(students[i]);
+			PrintStudent(&students[i]);
 			countFound++;
 		}
 	}
