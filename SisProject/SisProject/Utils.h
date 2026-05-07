@@ -16,6 +16,11 @@ inline static void PressEnterPause()
 	std::cin.ignore();
 	std::cin.get();
 }
+inline static void toUpper(char* prompt) {
+	for (int i = 0; prompt[i] != '\0'; i++) {
+		if (prompt[i] >= 'a' && prompt[i] <= 'z') prompt[i] -= 32;
+	}
+}
 inline static void DisplayTitle(const char title[]) {
 	int space = 7;
 	int length = strlen(title);
