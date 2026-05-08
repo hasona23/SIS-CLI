@@ -2,6 +2,12 @@
 #include "StudentManagement.h"
 #include "CourseManagement.h"
 
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
+
+
 static const char* GRADES_FILE_PATH = "./grades.txt";
 
 struct Grade
@@ -17,7 +23,12 @@ struct Grade
 
 //FILE IO =====================================================
 void SaveGrades(const Grade* grades, int amount);
-void AppendGrade(const Grade* grades);
+void AppendGrade(const Grade* grade);
 void CreateGradesFile();
 //MUST FREE MEMORY Grades at the end
 Grade* LoadGrades(int* amount);
+
+
+void AddGrade();
+float CalculateGpa(std::string studentid, Grade* grades, int amount);
+void GenerateTranscript(Grade* grades, int amount);

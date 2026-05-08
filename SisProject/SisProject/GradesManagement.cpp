@@ -1,7 +1,5 @@
 #include "GradesManagement.h"
-#include <fstream>
-#include <iostream>
-#include <string>
+
 
 
 void CreateGradesFile()
@@ -20,7 +18,7 @@ void CreateGradesFile()
 
 }
 
-void WriteGradeToFile(const Grade* grade, std::ofstream& file)
+static void WriteGradeToFile(const Grade* grade, std::ofstream& file)
 {
 	file << "[----]\n";
 	file << grade->StudentId << '\n';
@@ -85,6 +83,7 @@ Grade* LoadGrades(int* amount)
 		*amount = separators;
 		Grade* grades = new Grade[*amount];
 		int i = 0;
+		
 		file.clear();
 		file.seekg(0, std::ios::beg);
 		while (file.getline(buffer, 512))
@@ -98,18 +97,17 @@ Grade* LoadGrades(int* amount)
 			if (IsReadingGrade)
 			{
 				file.getline(buffer, 512);
-
 				strncpy_s(grades[i].StudentId, buffer,STUDENT_ID_LENGTH);
 				//grades[i].StudentId[STUDENT_ID_LENGTH] = '\0';
+				
 				file.getline(buffer, 512);
-
 				strncpy_s(grades[i].CourseId, buffer, COURSE_ID_LENGTH);
 				//grades[i].CourseId[COURSE_ID_LENGTH] = '\0';
+				
 				file.getline(buffer, 512);
-
 				grades[i].MidTerm = atoi(buffer);
+				
 				file.getline(buffer,512);
-
 				grades[i].Final = atoi(buffer);
 
 				i++;
@@ -125,3 +123,116 @@ Grade* LoadGrades(int* amount)
 		return nullptr;
 	}
 }
+
+void AddGrade()
+{
+    Grade g;
+
+    cout << "\n=======Enter Student Grades========\n";
+
+    cout << "Enter Student id: ";
+    cin >> g.StudentId;
+
+    cout << "Enter Course code: ";
+    cin >> g.CourseId;
+    do
+    {
+        cout << "Enter Midterm Grade(0:40): ";
+        cin >> g.MidTerm;
+
+        if (g.MidTerm < 0 || g.MidTerm > 40)
+        {
+            cout << "Invalid Midterm Grade!\n";
+        }
+
+    } while (g.MidTerm > 0 || g.MidTerm < 40);
+
+    do
+    {
+        cout << "Enter Final Grade(0:60): ";
+        cin >> g.Final;
+
+        if (g.Final < 0 || g.Final > 60)
+        {
+            cout << "Invalid Final Grade!\n";
+        }
+
+    } while (g.Final > 0 || g.Final < 60);
+
+	AppendGrade(&g);
+
+    int total = g.MidTerm + g.Final;
+    cout << "The Toltal = " << total << "/100 \n";
+    cout << "Garde Added Successfully\n";
+}
+
+/////////////////////////////////////////////////////
+
+float CalculateGpa(std::string studentid,Grade* grades,int amount)
+{
+    float totalpoints = 0;
+    int courses = 0;
+
+    for (int i = 0; i < amount; i++)
+    {
+        if (grades[i].StudentId == studentid)
+        {
+            int total = grades[i].MidTerm + grades[i].Final;
+            if (total >= 90)
+            {
+                totalpoints += 4.0;
+            }
+            else if (total >= 80)
+            {
+                totalpoints += 3.0;
+            }
+            else if (total >= 70)
+            {
+                totalpoints += 2.0;
+            }
+            else if (total >= 60)
+            {
+                totalpoints += 1;
+            }
+            else
+            {
+                totalpoints += 0;
+            }
+            courses++;
+        }
+    }
+    if (courses == 0)
+    {
+        return 0;
+    }
+    return totalpoints / courses;
+}
+
+/////////////////////////////////////////////////////////////
+
+void GenerateTranscript(Grade* grades, int amount)
+{
+    std::string studentid;
+
+    std::cout << "\nEnter Student ID: ";
+    std::cin >> studentid;
+
+    std::cout << "\n====STUDENT TRANSCRIPT====\n";
+
+    for (int i = 0; i < amount; i++)
+    {
+        if (grades[i].StudentId == studentid)
+        {
+            int total = grades[i].MidTerm + grades[i].Final;
+
+			std::cout << "\ncourse code: " << grades[i].CourseId;
+           std::cout << "\nMidterm: " << grades[i].MidTerm;
+           std::cout << "\nFinal exam: " << grades[i].Final;
+           std::cout << "\nTotal: " << total;
+           std::cout << "\n--------------------\n";
+        }
+    }
+	std::cout << "\nGPA = " << CalculateGpa(studentid,grades,amount) << '\n';
+}
+
+
