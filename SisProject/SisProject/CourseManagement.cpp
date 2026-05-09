@@ -7,6 +7,76 @@ using namespace std;
 
 
 
+static void PrintCourse(const Course* s) {
+	std::cout << "========================\n";
+	std::cout << "ID           : " << s->Id << "\n";
+	std::cout << "Title         : " << s->Title << "\n";
+	std::cout << "Credit Hours  : " << s->CreditHours << "\n";
+	std::cout << "========================\n";
+}
+
+
+static void SortCoursesById(Course* courses, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+			if (strcmp(courses[j].Id, courses[j + 1].Id) > 0)
+			{
+				Course temp = courses[j];
+				courses[j] = courses[j + 1];
+				courses[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+static void SortCoursesByTitle(Course* courses, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+
+			if (strcmp(courses[j].Title, courses[j + 1].Title) > 0)
+			{
+				Course temp = courses[j];
+				courses[j] = courses[j + 1];
+				courses[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+static void SortCoursesByCreditHrs(Course* courses, int amount)
+{
+	bool hasSwapped = true;
+	while (hasSwapped)
+	{
+
+		hasSwapped = false;
+		for (int j = 0; j < amount - 1; j++)
+		{
+
+			if (courses[j].CreditHours < courses[j + 1].CreditHours)
+			{
+				Course temp = courses[j];
+				courses[j] = courses[j + 1];
+				courses[j + 1] = temp;
+				hasSwapped = true;
+			}
+		}
+	}
+}
+
+
+
+
 
 void CreateCoursesFile()
 {
@@ -214,10 +284,11 @@ void addCourse() {//will ultimately be called add course and then will be given 
 }
 
 
-void DeleteCourse(int index, Course* courses, int* amount)
-{
-	if (index >= *amount)
-		return;
+void DeleteCourse(int index, Course* courses, int* amount) {
+
+	if (index >= *amount)return;
+
+
 	else {
 		for (int i = index; i < (*amount - 1); i++)
 			courses[i] = courses[i + 1];
@@ -227,25 +298,34 @@ void DeleteCourse(int index, Course* courses, int* amount)
 }
 void DeleteCourseMenu(Course* courses, int* amount)
 {
+	if (*amount == 0) {
+		cout << endl << "No courses registered. Press ENTER to continue... ";
+
+
+		cin.get();
+
+
+		return;
+	}
 	for (int i = 0; i < *amount; i++)
 	{
 		std::cout << (i + 1) << ") " << courses[i].Id << " - " << courses[i].Title << '\n';
 	}
-	char inputId[256]="";
+	char inputId[256] = "";
 	bool wasFound = false;
 	int removeIndex = -1;
 	do
 	{
 		Course tempCourse;
-	
+
 
 		std::cout << "Input ID (back to exit): ";
 		cin.getline(inputId, 256);
 		RemoveSpaces(inputId);
 		toUpper(inputId);
-		
+
 		strcpy_s(tempCourse.Id, inputId);
-		if (strcmp(tempCourse.Id,"BACK") ==0)
+		if (strcmp(tempCourse.Id, "BACK") == 0)
 			return;
 		if (!validateCourseId(&tempCourse))
 		{
@@ -267,8 +347,178 @@ void DeleteCourseMenu(Course* courses, int* amount)
 			std::cout << "Course with id " << inputId << " was not found\n";
 		}
 	} while (!wasFound);
+	cout << endl << "Are you sure you want to delete this course? (Y/N)";
+	if (tolower(cin.get()) == 'y') { //confirmation message
+		DeleteCourse(removeIndex, courses, amount);
+
+	}
+	else {
+		return;
+	}
 
 
-	DeleteCourse(removeIndex, courses, amount);
+}
 
+void ListCourses(Course* courses, int amount)
+{
+
+	if (amount == 0) {
+		cout << endl << "No courses registered. Press ENTER to continue... ";
+
+
+		cin.get();
+
+
+		return;
+	}
+	DisplayTitle("Course List");
+	std::cout << "Choose Sorting Method: \n";
+	std::cout << "1) Id\n";
+	std::cout << "2) Title (A-Z) \n";
+	std::cout << "3) Credit Hours\n";
+	int choice = 0;
+	do
+	{
+		std::cout << "Choice: ";
+		std::cin >> choice;
+	} while (choice < 1 || choice > 3);
+	switch (choice)
+	{
+	case 2:
+		SortCoursesByTitle(courses, amount);
+		break;
+	case 3:
+		SortCoursesByCreditHrs(courses, amount);
+		break;
+
+	default:
+		SortCoursesById(courses, amount);
+		break;
+	}
+	for (int i = 0; i < amount; i++)
+	{
+		PrintCourse(&courses[i]);
+	}
+	std::cin.ignore();
+	std::cout << "press ENTER to continue...";
+	std::cin.get();
+}
+
+void UpdateCourse(Course* course, const char* Title, int CreditHours)
+{
+
+
+	strncpy_s(course->Title, Title, MAX_COURSE_TITLE_LENGTH);
+	course->Title[MAX_COURSE_TITLE_LENGTH] = '\0';
+
+
+	course[0].CreditHours = CreditHours;
+
+
+
+}
+
+
+
+
+
+
+
+void UpdateCourseMenu(Course* courses, int amount)
+{
+	if (amount == 0) {
+		cout << endl << "No courses registered. Press ENTER to continue....";
+		cin.ignore();
+		cin.get();
+		return;
+	}
+	for (int i = 0; i < amount; i++)
+	{
+		std::cout << (i + 1) << ") " << courses[i].Id << " - " << courses[i].Title << '\n';
+	}
+	int index = -1;
+	char inputId[256] = "";
+	bool wasFound = false;
+
+	do
+	{
+		Course tempCourseSearch;
+		std::cout << "Input ID (back to exit): ";
+		cin.getline(inputId, 256);
+		RemoveSpaces(inputId);
+		toUpper(inputId);
+
+		strcpy_s(tempCourseSearch.Id, inputId);
+		if (strcmp(tempCourseSearch.Id, "BACK") == 0)
+			return;
+		if (!validateCourseId(&tempCourseSearch))
+		{
+			std::cout << "Invalid input Id\n";
+			continue;
+		}
+		wasFound = false;
+		for (int i = 0; i < amount; i++)
+		{
+			if (strcmp(courses[i].Id, tempCourseSearch.Id) == 0)
+			{
+				wasFound = true;
+				index = i;
+				break;
+			}
+		}
+		if (!wasFound)
+			std::cout << "Course with ID " << inputId << " was not found\n";
+	} while (!wasFound);
+	char newTitle[256] = "";
+	int newCredit = 0;
+
+	Course tempcourse;
+
+
+	std::cout << "Enter new title or 0 to skip: ";
+	//std::cin.ignore();
+	cin.getline(newTitle, 256, '\n');
+	strcpy_s(tempcourse.Title, newTitle);
+	while (strcmp(tempcourse.Title, "0") != 0 && !validateCourseTitle(tempcourse))
+	{
+		std::cout << "Invalid Title, Course title cannot be empty.\n";
+		std::cout << "Enter Title: ";
+		cin.getline(newTitle, 256);
+		strcpy_s(tempcourse.Title, newTitle);
+		if (strcmp(tempcourse.Title, "back") == 0)
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	if (strcmp(newTitle, "0") == 0)
+		strcpy_s(newTitle, courses[index].Title);
+	std::cin.ignore();
+	std::cout << "Enter new Credit Hours or 0 to skip: ";
+	std::cin >> newCredit;
+	tempcourse.CreditHours = newCredit;
+
+	while (newCredit != 0 && !validateCreditHrs(tempcourse))
+	{
+		std::cout << "Invalid Credit Hours [" << newCredit << "]. Credit hours must be 1,2,3, or 4. You may enter -1 to go back or ENTER to continue\n";
+		std::cout << "Enter Credit Hours: ";
+		std::cin >> newCredit;
+		tempcourse.CreditHours = newCredit;
+		if (newCredit == -1)
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
+	if (newCredit == 0)
+		newCredit = courses[index].CreditHours;
+
+
+	//std::cin.ignore();
+
+
+
+	UpdateCourse(&courses[index], newTitle, newCredit);
 }

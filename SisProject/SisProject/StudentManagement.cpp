@@ -9,28 +9,78 @@
 
 
 //vALIDATION ===========================================================================================
-
+static bool IsLeapYear(int year)
+{
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
 bool ValidateAge(const char* birthDate)
 {
-	std::chrono::year_month_day date;
+	static const int DYAS_OF_MONTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	for (int i = 0; i < strlen(birthDate); i++)
+	{
+		if (i == 2 || i == 5)
+		{
+			if (birthDate[i] != '/')
+				return false;
+		}
+		else if (!isdigit(birthDate[i]))
+			return false;
+	}
+	char dayBuffer[3];
+	strncpy_s(dayBuffer, birthDate, 2);
+	dayBuffer[2] = '\0';
+	int birthDay = atoi(dayBuffer);
 	
-	std::istringstream ss(birthDate);
-	ss >> std::chrono::parse("%d/%m/%Y", date);
+	char monthBuffer[3];
+	strncpy_s(monthBuffer, birthDate + 3, 2);
+	monthBuffer[2] = '\0';
+	int birthMonth = atoi(monthBuffer);
 
-	if (ss.fail() || !date.ok())
+	char yearBuffer[5];
+	strncpy_s(yearBuffer, birthDate + 6, 4);
+	yearBuffer[4] = '\0';
+	int birthYear = atoi(yearBuffer);
+
+	//Check date is valid (EX: 31/2/2009)
+	if (birthMonth != 2)
+	{
+		if (birthDay > DYAS_OF_MONTH[birthMonth - 1])
+			return false;
+
+	}
+	else {
+		if (IsLeapYear(birthYear))
+		{
+			if (birthDay > 29)
+				return false;
+		}
+		else {
+			if (birthDay > 28)
+				return false;
+		}
+	}
+
+	time_t currentTime_t = time(0);
+	tm* currentTime = localtime(&currentTime_t);
+
+	//C stores time in years since 1900
+	int currentYear = currentTime->tm_year + 1900;
+	//C stores months from 0 to 11
+	int currentMonth = currentTime->tm_mon + 1;
+	int currentDay = currentTime->tm_mday;
+
+	if (currentYear < birthYear)
 		return false;
-	auto currentTimePoint = std::chrono::system_clock::now();
-	std::chrono::year_month_day today = std::chrono::year_month_day{std::chrono::floor<std::chrono::days>(currentTimePoint)};
-	//Subtract years
-	int age = (int)today.year() - (int)date.year();
-
-	//Check if not reached current month and date to reduce year
-	if (today.month() < date.month() || (today.month() == date.month() && today.day() < date.day()))
-		age--;
-	//Check age
-	if (age < 17) 
-		return false;
-
+	else if (currentYear == birthYear)
+	{
+		if (currentMonth < birthMonth)
+			return false;
+		else if (currentMonth == birthMonth)
+		{
+			if (currentDay < birthDay)
+				return false;
+		}
+	}
 
 	return true;
 }
@@ -164,7 +214,7 @@ void WriteStudentToFile(const Student student, std::ofstream& file)
 	file << student.Id << '\n';
 	file << student.NationalId << '\n';
 	file << student.Gender << '\n';
-	file << student.BirthDate<<'\n';
+	file << student.BirthDate << '\n';
 	file << student.PhoneNumber << '\n';
 	file << student.Gpa << '\n';
 

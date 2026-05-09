@@ -19,8 +19,8 @@ void PrintStudent(const Student* s);
 void ListStudents(Student* students, int amount);
 void AddStudentMenu(Student* students, int amount);
 void SearchStudents(Student* students, int amount);
-void DeleteStudentMenu(Student* students, int *amount);
-void UpdateStudentMenu(Student*students,int amount);
+void DeleteStudentMenu(Student* students, int* amount);
+void UpdateStudentMenu(Student* students, int amount);
 int StudentManagementMenu();
 int CourseManagementMenu();
 int GradesManagementMenu();
@@ -30,14 +30,15 @@ void DeleteCourseMenu(Course* courses, int* amount);
 void DeleteCourse(int index, Course* courses, int* amount);
 
 
+void ListCourses(Course* courses, int amount);
+
+static void SortCoursesById(Course* courses, int amount);
+static void SortCoursesByTitle(Course* courses, int amount);
+
+static void SortCoursesByCreditHrs(Course* courses, int amount);
 
 
-
-
-
-
-
-
+void UpdateCourseMenu(Course* courses, int amount);
 
 /*
 Thoughts:

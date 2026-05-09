@@ -10,7 +10,7 @@ static void PrintStudent(const Student* s) {
 	std::cout << "National ID  : " << s->NationalId << "\n";
 	std::cout << "Phone        : " << s->PhoneNumber << "\n";
 	std::cout << "Gender       : " << s->Gender << "\n";
-	std::cout << "Program      : " << ProgramsStr[s->Program-1] << "\n";
+	std::cout << "Program      : " << ProgramsStr[s->Program - 1] << "\n";
 	std::cout << "Level        : " << s->Level << "\n";
 	std::cout << "GPA          : " << s->Gpa << "\n";
 	std::cout << "Birthdate    : " << s->BirthDate << "\n";
@@ -126,6 +126,15 @@ static void SortStudentsByNationalId(Student* students, int amount)
 }
 void ListStudents(Student* students, int amount)
 {
+	if (amount == 0) {
+		cout << endl << "No students registered. Press ENTER to continue... ";
+
+		cin.ignore();
+		cin.get();
+
+
+		return;
+	}
 	DisplayTitle("Student List");
 	std::cout << "Choose Sorting Method: \n";
 	std::cout << "1) Id\n";
@@ -354,6 +363,12 @@ void AddStudentMenu(Student* students, int amount)
 
 void SearchStudents(Student* students, int amount)
 {
+	if (amount == 0) {
+		cout << endl << "No students registered. Press ENTER to continue....";
+		cin.ignore();
+		cin.get();
+		return;
+	}
 	std::string searchName;
 	std::string searchId = "";
 	std::string searchNationalId = "";
@@ -443,7 +458,17 @@ void SearchStudents(Student* students, int amount)
 
 }
 void DeleteStudentMenu(Student* students, int* amount)
+
 {
+	if (*amount == 0) {
+		cout << endl << "No students registered. Press ENTER to continue... ";
+
+		cin.ignore();//it just fixes the glitch idk
+		cin.get();
+
+
+		return;
+	}
 	for (int i = 0; i < *amount; i++)
 	{
 		std::cout << (i + 1) << ") " << students[i].Id << " - " << students[i].Name << '\n';
@@ -474,16 +499,26 @@ void DeleteStudentMenu(Student* students, int* amount)
 		}
 		if (!wasFound)
 		{
-			std::cout << "Student with id" << inputId << " not found\n";
+			std::cout << "Student with ID " << inputId << " not found\n";
 		}
 	} while (!ValidateStudentId(inputId.c_str()) || !wasFound);
+	cin.ignore(); //Modified this part to enable confirmation messages -Eyad
+	cout << endl << "Are you sure you want to delete this student? (Y/N) ";
 
+	if (tolower(cin.get()) == 'y') {
+		DeleteStudent(removeIndex, students, amount);
 
-	DeleteStudent(removeIndex, students, amount);
-
+	}
+	else return;
 }
 void UpdateStudentMenu(Student* students, int amount)
 {
+	if (amount == 0) {
+		cout << endl << "No students registered. Press ENTER to continue....";
+		cin.ignore();
+		cin.get();
+		return;
+	}
 	for (int i = 0; i < amount; i++)
 	{
 		std::cout << (i + 1) << ") " << students[i].Id << " - " << students[i].Name << '\n';
@@ -524,7 +559,7 @@ void UpdateStudentMenu(Student* students, int amount)
 	std::cout << "Enter new name or 0 to skip: ";
 	std::cin.ignore();
 	std::getline(std::cin, newName);
-	
+
 	while (newName != "0" && !ValidateName(newName.c_str()))
 	{
 		std::cout << "Invalid NAME [" << newName << "]. format [FirstName] [LastName] or enter back to continue\n";
@@ -616,7 +651,8 @@ int StudentManagementMenu() {//studmng menu
 		}
 		if (choice != 1) {
 			SortStudentsById(students, amount);
-			SaveStudents(students, amount);}
+			SaveStudents(students, amount);
+		}
 		delete[] students;
 
 	}
@@ -641,7 +677,7 @@ int CourseManagementMenu() {//course management menu
 
 
 		cout << "Enter your choice: ";
-		
+
 		Course* courses = nullptr;
 		int amount = 0;
 
@@ -651,9 +687,9 @@ int CourseManagementMenu() {//course management menu
 		switch (choice) {
 		case 1:addCourse();
 			break;
-		case 2:
+		case 2:ListCourses(courses, amount);
 			break;
-		case 3:
+		case 3:UpdateCourseMenu(courses, amount);
 			break;
 		case 4:  DeleteCourseMenu(courses, &amount);
 			break;
@@ -667,7 +703,7 @@ int CourseManagementMenu() {//course management menu
 
 
 		}if (choice != 1) {
-			
+
 			SaveCourses(courses, amount);
 		}
 		delete[] courses;
