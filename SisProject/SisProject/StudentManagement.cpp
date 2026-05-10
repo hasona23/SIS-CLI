@@ -6,42 +6,47 @@
 #include <fstream>
 #include <string>
 #include <chrono>
-
+#include "Utils.h"
 
 //vALIDATION ===========================================================================================
 static bool IsLeapYear(int year)
 {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
-bool ValidateAge(const char* birthDate)
+bool ValidateAge(const char* birthDateInput)
 {
 	static const int DYAS_OF_MONTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
-	for (int i = 0; i < strlen(birthDate); i++)
+
+	char birthDate[DATE_LENGTH+1];
+	strncpy_s(birthDate, birthDateInput,DATE_LENGTH);
+	birthDate[DATE_LENGTH] = '\0';
+
+	for (int i = 0; birthDateInput[i] != '\0'; i++)
 	{
-		if (i == 2 || i == 5)
-		{
-			if (birthDate[i] != '/')
-				return false;
-		}
-		else if (!isdigit(birthDate[i]))
-			return false;
+		if(birthDate[i]=='\\' || birthDate[i]=='_' || birthDate[i]=='-' || birthDate[i]=='.')
+			birthDate[i] = '/';
 	}
-	char dayBuffer[3];
-	strncpy_s(dayBuffer, birthDate, 2);
-	dayBuffer[2] = '\0';
+	char* dayBuffer = strtok(birthDate, "/");
+	if (dayBuffer == nullptr || !IsNumber(dayBuffer) || strlen(dayBuffer)>2)
+		return false;
+	std::cout << "DAY: " << dayBuffer << '\n';
 	int birthDay = atoi(dayBuffer);
 	
-	char monthBuffer[3];
-	strncpy_s(monthBuffer, birthDate + 3, 2);
-	monthBuffer[2] = '\0';
+	char* monthBuffer = strtok(NULL,"/");
+	if (monthBuffer == nullptr || !IsNumber(monthBuffer) || strlen(monthBuffer)>2)
+		return false;
+	std::cout << "MONTH: " << monthBuffer << '\n';
 	int birthMonth = atoi(monthBuffer);
 
-	char yearBuffer[5];
-	strncpy_s(yearBuffer, birthDate + 6, 4);
-	yearBuffer[4] = '\0';
+	char* yearBuffer = strtok(NULL,"/");
+	if (yearBuffer == nullptr || !IsNumber(yearBuffer) || strlen(yearBuffer) != 4)
+		return false;
+	std::cout << "YEAR: " << yearBuffer << '\n';
 	int birthYear = atoi(yearBuffer);
 
 	//Check date is valid (EX: 31/2/2009)
+	if (birthMonth < 1 || birthMonth>12)
+		return false;
 	if (birthMonth != 2)
 	{
 		if (birthDay > DYAS_OF_MONTH[birthMonth - 1])
@@ -59,7 +64,7 @@ bool ValidateAge(const char* birthDate)
 				return false;
 		}
 	}
-
+	std::cout << "Birthdate: " << birthDay << '/' << birthMonth << '/' << birthYear << '\n';
 	time_t currentTime_t = time(0);
 	tm* currentTime = localtime(&currentTime_t);
 
@@ -81,7 +86,7 @@ bool ValidateAge(const char* birthDate)
 				return false;
 		}
 	}
-
+	
 	return true;
 }
 

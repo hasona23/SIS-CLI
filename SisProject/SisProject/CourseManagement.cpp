@@ -87,8 +87,7 @@ void CreateCoursesFile()
 	if (!file.is_open())
 	{
 		std::cout << "FAILED TO CREATE COURSES FILE\n";
-		std::cout << "Press enter to exit...";
-		std::cin.get();
+		PressEnterPause();
 		std::exit(1);
 	}
 
@@ -399,9 +398,7 @@ void ListCourses(Course* courses, int amount)
 	{
 		PrintCourse(&courses[i]);
 	}
-	std::cin.ignore();
-	std::cout << "press ENTER to continue...";
-	std::cin.get();
+	PressEnterPause();
 }
 
 void UpdateCourse(Course* course, const char* Title, int CreditHours)
@@ -514,10 +511,6 @@ void UpdateCourseMenu(Course* courses, int amount)
 	}
 	if (newCredit == 0)
 		newCredit = courses[index].CreditHours;
-
-
-	//std::cin.ignore();
-
 
 
 	UpdateCourse(&courses[index], newTitle, newCredit);

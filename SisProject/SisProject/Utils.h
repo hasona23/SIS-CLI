@@ -48,6 +48,10 @@ inline static void toUpper(char* prompt) {
 		if (prompt[i] >= 'a' && prompt[i] <= 'z') prompt[i] -= 32;
 	}
 }
+inline static void ClearCmd()
+{
+	system("cls");
+}
 inline static void toLower(char* prompt)
 {
 	for (int i = 0; prompt[i] != '\0'; i++)
@@ -97,4 +101,23 @@ inline static void RemoveSpaces(std::string str)
 			i--;
 		}
 	}
+}
+
+inline static bool IsNumber(const char* str)
+{
+	for (int i = 0; str[i] != '\0'; i++)
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return false;
+	}
+	return true;
+}
+inline static bool IsNumber(std::string str)
+{
+	for (int i = 0; str[i] != '\0'; i++)
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return false;
+	}
+	return true;
 }
