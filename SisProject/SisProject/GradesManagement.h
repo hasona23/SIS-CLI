@@ -29,6 +29,13 @@ void CreateGradesFile();
 Grade* LoadGrades(int* amount);
 
 
-void AddGrade();
-float CalculateGpa(std::string studentid, Grade* grades, int amount);
+void AddGrade(Grade* grades,int amount);
+void UpdateGrade(Grade* grades, int amount);
+void DeleteGrade(Grade* grades, int* amount);
+void ShowGrades(Grade* grades, int amount);
+
+double CalculateGpa(std::string studentid, Grade* grades, int amount);
 void GenerateTranscript(Grade* grades, int amount);
+
+void DeleteGradeByStudentId(Grade* grades, const char* studentId, int* amount);
+void DeleteGradeByCourseId(Grade* grades, const char* courseId, int* amount);

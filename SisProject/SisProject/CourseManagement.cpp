@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Utils.h"
+#include "GradesManagement.h"
 using namespace std;
 
 
@@ -196,8 +197,8 @@ Course* LoadCourses(int* amount)
 //All below this point was created by eyad, saying that to distinguish pieces of code
 
 //receive input of courses
-int validateCourseId(Course* course) { //3 letters, 3 digits, unique
-	RemoveSpaces(course[0].Id);
+int ValidateCourseId(char* id) { //3 letters, 3 digits, unique
+	RemoveSpaces(id);
 
 
 
@@ -206,17 +207,17 @@ int validateCourseId(Course* course) { //3 letters, 3 digits, unique
 	//or use strcmp with other course names in the courses file which are marked by a specific line pattern in the courses.txt
 
 
-	if (strlen(course[0].Id) != 6) return -1;
+	if (strlen(id) != 6) return -1;
 
 	for (int i = 0; i < 3; i++) {
-		if (course[0].Id[i] >= 'a' && course[0].Id[i] <= 'z') {
-			course[0].Id[i] -= 32;
+		if (id[i] >= 'a' && id[i] <= 'z') {
+			id[i] -= 32;
 
 		}
-		if (course[0].Id[i] < 'A' || course[0].Id[i] > 'Z') return -2;
+		if (id[i] < 'A' || id[i] > 'Z') return -2;
 	}
-	for (int i = 3; course[0].Id[i] != '\0'; i++) {
-		if (course[0].Id[i] < '0' || course[0].Id[i] > '9')return -3;
+	for (int i = 3; id[i] != '\0'; i++) {
+		if (id[i] < '0' || id[i] > '9')return -3;
 	}
 	fstream file;
 	file.open(COURSES_FILE_PATH);
@@ -227,7 +228,7 @@ int validateCourseId(Course* course) { //3 letters, 3 digits, unique
 			if (strcmp("[----]", buffer) == 0) separatorDist = 0;
 			else separatorDist++;
 			if (separatorDist == 1) {
-				if (strcmp(buffer, course[0].Id) == 0) return -4;
+				if (strcmp(buffer, id) == 0) return -4;
 			}
 		}
 	}
@@ -249,8 +250,8 @@ void addCourse() {//will ultimately be called add course and then will be given 
 	Course course;
 	std::cout << "Enter course Id: ";
 	cin.getline(course.Id, 256);
-	while (validateCourseId(&course) != 0) {
-		switch (validateCourseId(&course)) {
+	while (ValidateCourseId(course.Id) != 0) {
+		switch (ValidateCourseId(course.Id)) {
 		case -1: cout << "Invalid course ID length, must only be 6 characters." << endl << "Enter course ID: ";
 			break;
 		case -2:cout << "Invalid course ID format, must be 3 letters then 3 digits." << endl << "Enter course ID: ";
@@ -326,7 +327,7 @@ void DeleteCourseMenu(Course* courses, int* amount)
 		strcpy_s(tempCourse.Id, inputId);
 		if (strcmp(tempCourse.Id, "BACK") == 0)
 			return;
-		if (!validateCourseId(&tempCourse))
+		if (!ValidateCourseId(tempCourse.Id))
 		{
 			std::cout << "Invalid input Id\n";
 			continue;
@@ -348,6 +349,11 @@ void DeleteCourseMenu(Course* courses, int* amount)
 	} while (!wasFound);
 	cout << endl << "Are you sure you want to delete this course? (Y/N)";
 	if (tolower(cin.get()) == 'y') { //confirmation message
+		int gradesCount = 0;
+		Grade* grades = LoadGrades(&gradesCount);
+		DeleteGradeByCourseId(grades,courses[removeIndex].Id,&gradesCount);
+		SaveGrades(grades, gradesCount);
+		delete[] grades;
 		DeleteCourse(removeIndex, courses, amount);
 
 	}
@@ -448,7 +454,7 @@ void UpdateCourseMenu(Course* courses, int amount)
 		strcpy_s(tempCourseSearch.Id, inputId);
 		if (strcmp(tempCourseSearch.Id, "BACK") == 0)
 			return;
-		if (!validateCourseId(&tempCourseSearch))
+		if (!ValidateCourseId(tempCourseSearch.Id))
 		{
 			std::cout << "Invalid input Id\n";
 			continue;

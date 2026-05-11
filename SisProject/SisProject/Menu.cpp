@@ -143,6 +143,13 @@ void ListStudents(Student* students, int amount)
 	std::cout << "3) GPA\n";
 	std::cout << "4) National Id\n";
 	int choice = 0;
+
+	int gradesCount = 0;
+	Grade* grades = LoadGrades(&gradesCount);
+	for (int i = 0; i < amount; i++)
+	{
+		students[i].Gpa = CalculateGpa(students[i].Id, grades, gradesCount);
+	}
 	do
 	{
 		std::cout << "Choice: ";
@@ -170,6 +177,8 @@ void ListStudents(Student* students, int amount)
 	std::cin.ignore();
 	std::cout << "press enter to continue...";
 	std::cin.get();
+
+	delete[] grades;
 }
 
 void AddStudentMenu(Student* students, int amount)
@@ -509,8 +518,13 @@ void DeleteStudentMenu(Student* students, int* amount)
 	cout << endl << "Are you sure you want to delete this student? (Y/N) ";
 
 	if (tolower(cin.get()) == 'y') {
-		DeleteStudent(removeIndex, students, amount);
+		int gradesCount = 0;
+		Grade* grades = LoadGrades(&gradesCount);
+		DeleteGradeByCourseId(grades, students[removeIndex].Id, &gradesCount);
+		SaveGrades(grades, gradesCount);
+		delete[] grades;
 
+		DeleteStudent(removeIndex, students, amount);
 	}
 	else return;
 }
@@ -853,12 +867,12 @@ int MainMenu() {//main menu func
 	while (!valid) {
 		ClearCmd();
 		DisplayTitle("Student information system");
-		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' <<"4. Help"<<'\n' << "5. Exit";
+		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. Help" << '\n' << "5. Exit";
 		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
 		cin >> choice;
 		valid = true;
-		
+
 		switch (choice) {
 		case 1:
 			StudentManagementMenu();
@@ -886,32 +900,45 @@ int MainMenu() {//main menu func
 	return choice;
 }
 int GradesManagementMenu() {//grades mng menu
-	for (int i = 0; i < 3; i++) cout << "=";
-	cout << " " << "Grades Management" << " ";
-	for (int i = 0; i < 3; i++) cout << "=";
-	cout << '\n' << '\n';
-	cout << "1. Enter Student Grades" << '\n' << "2. View Student Grades" << '\n' << "3. Calculate GPA" << '\n' << "4. Generate Transcript" << '\n';;
-	cout << "5. Back to Main Menu";
-	cout << '\n' << '\n';
+	
 
 	int choice = 0; bool valid = false;
 	while (!valid) {
+		DisplayTitle("Grades Management");
+		cout << '\n' << '\n';
+		cout << "1. Show Grades" << '\n' << "2. Enter Grade" << '\n' << "3. Change Grade" << '\n' << "4. Delete Grade\n" << "5. Generate Transcript" << '\n';
+		cout << "6. Back to Main Menu";
+		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
 		cin >> choice;
+		int amount = 0;
+		Grade* grades = nullptr;
+		if (choice <= 5 && choice >= 1)
+			grades = LoadGrades(&amount);
 		switch (choice) {
-		case 1:valid = true;
+		case 1:ShowGrades(grades, amount);
 			break;
-		case 2:valid = true;
+		case 2:
+			AddGrade(grades, amount);
 			break;
-		case 3:valid = true;
+		case 3:UpdateGrade(grades, amount);
 			break;
-		case 4: valid = true; break;
-		case 5: return -1;
+		case 4:
+			DeleteGrade(grades, &amount);
+			break;
+		case 5:
+			GenerateTranscript(grades, amount);
+			break;
+		case 6: return -1;
 		default:choice = 0;
 			cout << "Invalid input, please try again" << '\n';
 			valid = false;
 
 		}
+		if (choice <= 5 && choice >= 1 && choice != 2)
+			SaveGrades(grades, amount);
+		delete[] grades;
+		ClearCmd();
 
 	}
 

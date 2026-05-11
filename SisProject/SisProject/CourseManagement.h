@@ -20,3 +20,4 @@ void CreateCoursesFile();
 void addCourse();
 //MUST FREE MEMORY Course at the end
 Course* LoadCourses(int* amount);
+int ValidateCourseId(char* course);
