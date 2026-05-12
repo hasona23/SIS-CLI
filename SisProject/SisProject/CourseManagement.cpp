@@ -521,3 +521,57 @@ void UpdateCourseMenu(Course* courses, int amount)
 
 	UpdateCourse(&courses[index], newTitle, newCredit);
 }
+
+int CourseManagementMenu() {//course management menu
+
+	int choice = 0;
+
+	while (choice != 5) {
+		ClearCmd();
+		for (int i = 0; i < 3; i++) cout << "=";
+		cout << " " << "Course Management" << " ";
+		for (int i = 0; i < 3; i++) cout << "=";
+		cout << '\n' << '\n';
+		cout << "1. Add New Course" << '\n' << "2. View All Courses" << '\n' << "3. Update Course" << '\n' << "4. Delete Course" << '\n';;
+		cout << "5. Back to Main Menu";
+		cout << '\n' << '\n';
+
+
+
+		cout << "Enter your choice: ";
+
+		Course* courses = nullptr;
+		int amount = 0;
+
+		courses = LoadCourses(&amount);
+		cin >> choice;
+		cin.ignore(); //eyad added this
+		switch (choice) {
+		case 1:addCourse();
+			break;
+		case 2:ListCourses(courses, amount);
+			break;
+		case 3:UpdateCourseMenu(courses, amount);
+			break;
+		case 4:  DeleteCourseMenu(courses, &amount);
+			break;
+		case 5: cout << "Going back to main menu.\n";
+
+			break;
+		default:choice = 0;
+			cout << "Invalid input, please try again" << '\n';
+
+
+
+
+		}if (choice != 1) {
+
+			SaveCourses(courses, amount);
+		}
+		delete[] courses;
+	}
+
+	return choice;
+
+
+}

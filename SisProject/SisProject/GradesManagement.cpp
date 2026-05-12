@@ -1,5 +1,6 @@
 #include "GradesManagement.h"
 #include "Utils.h"
+
 using namespace std;
 
 
@@ -171,6 +172,8 @@ void AddGrade(Grade* grades, int amount)
 		if (g.StudentId == "BACK")
 		{
 			cout << "Going back to menu...\n";
+			delete[] students;
+			delete[] courses;
 			return;
 		}
 	}
@@ -186,6 +189,8 @@ void AddGrade(Grade* grades, int amount)
 		if (g.CourseId == "BACK")
 		{
 			cout << "Going back to menu...\n";
+			delete[] courses;
+			delete[] students;
 			return;
 		}
 	}
@@ -195,6 +200,8 @@ void AddGrade(Grade* grades, int amount)
 		{
 			cout << "Grades for student " << g.StudentId << " in course " << g.CourseId << " already exist. Please use update grade option to change the grade.\n";
 			PressEnterPause();
+			delete[] students;
+			delete[] courses;
 			return;
 		}
 	}
@@ -233,6 +240,8 @@ void AddGrade(Grade* grades, int amount)
 	cout << "The Toltal = " << total << "/100 \n";
     cout << "Garde Added Successfully\n";
 	PressEnterPause();
+	delete[] students;
+	delete[] courses;
 }
 
 void UpdateGrade(Grade* grades,int amount) {
@@ -353,8 +362,6 @@ void DeleteGrade(Grade* grades,int* amount) {
 	}
 }
 
-/////////////////////////////////////////////////////
-
 double CalculateGpa(std::string studentId, Grade* grades, int amount)
 {
     int coursesAmount = 0;
@@ -381,6 +388,7 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
 			{
 				std::cout << "Error calculating GPA. Course with code " << grades[i].CourseId << " not found.\n";
 				PressEnterPause();
+				delete[] courses;
 				return -1;
 			}
             int total = grades[i].MidTerm + grades[i].Final;
@@ -388,15 +396,13 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
 			totalHours += course->CreditHours;
         }
     }
+	delete[] courses;
     if (totalHours == 0)
     {
         return 0;
     }
     return totalGrades/totalHours;
 }
-
-/////////////////////////////////////////////////////////////
-
 void GenerateTranscript(Grade* grades, int amount)
 {
     std::string studentid;
@@ -423,5 +429,52 @@ void GenerateTranscript(Grade* grades, int amount)
 	PressEnterPause();
 	
 }
+int GradesManagementMenu() {//grades mng menu
 
 
+	int choice = 0; bool valid = false;
+	while (!valid) {
+		DisplayTitle("Grades Management");
+		cout << '\n' << '\n';
+		cout << "1. Show Grades" << '\n' << "2. Enter Grade" << '\n' << "3. Change Grade" << '\n' << "4. Delete Grade\n" << "5. Generate Transcript" << '\n';
+		cout << "6. Back to Main Menu";
+		cout << '\n' << '\n';
+		cout << "Enter your choice: ";
+		cin >> choice;
+		int amount = 0;
+		Grade* grades = nullptr;
+		if (choice <= 5 && choice >= 1)
+			grades = LoadGrades(&amount);
+		switch (choice) {
+		case 1:ShowGrades(grades, amount);
+			break;
+		case 2:
+			AddGrade(grades, amount);
+			break;
+		case 3:UpdateGrade(grades, amount);
+			break;
+		case 4:
+			DeleteGrade(grades, &amount);
+			break;
+		case 5:
+			GenerateTranscript(grades, amount);
+			break;
+		case 6: return -1;
+		default:choice = 0;
+			cout << "Invalid input, please try again" << '\n';
+			valid = false;
+
+		}
+		if (choice <= 5 && choice >= 1 && choice != 2)
+			SaveGrades(grades, amount);
+		delete[] grades;
+		ClearCmd();
+
+	}
+
+	return choice;
+
+
+
+
+}
