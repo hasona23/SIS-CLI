@@ -376,9 +376,9 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
         if (grades[i].StudentId == studentId)
         {
 			Course* course = nullptr;
-			for (int i = 0; i < coursesAmount; i++)
+			for (int j = 0; j < coursesAmount; j++)
 			{
-				if (strcmp(courses[i].Id, grades[i].CourseId) == 0)
+				if (strcmp(courses[j].Id, grades[i].CourseId) == 0)
 				{
 					course = &courses[i];
 					break;
@@ -401,7 +401,8 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
     {
         return 0;
     }
-    return totalGrades/totalHours;
+	//GPA is out of 4
+    return totalGrades/totalHours * (4.0/100);
 }
 void GenerateTranscript(Grade* grades, int amount)
 {
@@ -411,7 +412,7 @@ void GenerateTranscript(Grade* grades, int amount)
     std::cin >> studentid;
 	toUpper(studentid.data());
     std::cout << "\n====STUDENT TRANSCRIPT====\n";
-
+	bool hasGrades = false;
     for (int i = 0; i < amount; i++)
     {
         if (grades[i].StudentId == studentid)
@@ -423,24 +424,70 @@ void GenerateTranscript(Grade* grades, int amount)
            std::cout << "Final exam: " << grades[i].Final << '\n';
            std::cout << "Total: " << total << '\n';
            std::cout << "--------------------\n";
+		   hasGrades = true;
         }
     }
-	std::cout << "\nGPA = " << CalculateGpa(studentid,grades,amount) << '\n';
+	if (hasGrades) 
+	{
+		std::cout << "\nGPA = " << CalculateGpa(studentid, grades, amount) << '\n';
+		int coursesAmount = 0;
+		Course* courses = LoadCourses(&coursesAmount);
+		int totalHours = 0;
+		for (int i = 0; i < amount; i++)
+		{
+			if (grades[i].StudentId == studentid)
+			{
+				for (int j = 0; j < coursesAmount; j++)
+				{
+					if (strcmp(courses[j].Id, grades[i].CourseId) == 0)
+					{
+						totalHours += courses[j].CreditHours;
+						break;
+					}
+				}
+			}
+		}
+		delete[] courses;
+		std::cout << "Total Credit Hours: " << totalHours << '\n';
+	}
+	
+	else
+	{
+		int studentsAmount = 0;
+		Student* students = LoadStudents(&studentsAmount);
+
+		if(StudentExists(studentid.c_str(),students,studentsAmount))
+			std::cout << "No grades found for student with ID " << studentid << '\n';
+		else
+			std::cout << "No student found with ID " << studentid << '\n';
+	}
 	PressEnterPause();
 	
 }
 int GradesManagementMenu() {//grades mng menu
 
 
-	int choice = 0; bool valid = false;
-	while (!valid) {
+	int choice = -1;
+	while (choice != 0) {
+		ClearCmd();
 		DisplayTitle("Grades Management");
-		cout << '\n' << '\n';
+		
 		cout << "1. Show Grades" << '\n' << "2. Enter Grade" << '\n' << "3. Change Grade" << '\n' << "4. Delete Grade\n" << "5. Generate Transcript" << '\n';
-		cout << "6. Back to Main Menu";
+		cout << "0. Back to Main Menu";
 		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
-		cin >> choice;
+		std::string input;
+		cin >> input;
+
+		if (IsNumber(input.c_str()))
+			choice = atoi(input.c_str());
+		else
+		{
+			choice = -1;
+			std::cout << "Invalid input, please try again" << '\n';
+			PressEnterPause();
+			continue;
+		}
 		int amount = 0;
 		Grade* grades = nullptr;
 		if (choice <= 5 && choice >= 1)
@@ -459,17 +506,18 @@ int GradesManagementMenu() {//grades mng menu
 		case 5:
 			GenerateTranscript(grades, amount);
 			break;
-		case 6: return -1;
-		default:choice = 0;
+		case 0: 
+			std::cout << "Going back to main menu...\n";
+			
+			break;
+		default:
+			choice = -1;
 			cout << "Invalid input, please try again" << '\n';
-			valid = false;
-
+		
 		}
 		if (choice <= 5 && choice >= 1 && choice != 2)
 			SaveGrades(grades, amount);
 		delete[] grades;
-		ClearCmd();
-
 	}
 
 	return choice;

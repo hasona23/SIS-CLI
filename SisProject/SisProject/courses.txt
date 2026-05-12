@@ -1,9 +1,4 @@
 [----]
-CSE134
-CSEMOHD
-2
-[----]
-[----]
 CSE131
 CSEMOHD
 3
@@ -17,6 +12,11 @@ CSEMOHD
 CSE133
 CSEMOHD
 4
+[----]
+[----]
+CSE134
+CSEMOHD
+2
 [----]
 [----]
 CSE135

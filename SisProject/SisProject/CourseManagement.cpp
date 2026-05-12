@@ -524,47 +524,53 @@ void UpdateCourseMenu(Course* courses, int amount)
 
 int CourseManagementMenu() {//course management menu
 
-	int choice = 0;
+	int choice = -1;
 
-	while (choice != 5) {
+	while (choice != 0) {
 		ClearCmd();
-		for (int i = 0; i < 3; i++) cout << "=";
-		cout << " " << "Course Management" << " ";
-		for (int i = 0; i < 3; i++) cout << "=";
-		cout << '\n' << '\n';
-		cout << "1. Add New Course" << '\n' << "2. View All Courses" << '\n' << "3. Update Course" << '\n' << "4. Delete Course" << '\n';;
-		cout << "5. Back to Main Menu";
+		DisplayTitle("Course Management");
+		//VIEW -> ADD -> UPDATE -> DELETE
+		cout << "1. View Courses" << '\n' << "2. Add Courses" << '\n' << "3. Update Course" << '\n' << "4. Delete Course" << '\n';;
+		cout << "0. Back to Main Menu";
 		cout << '\n' << '\n';
 
 
 
 		cout << "Enter your choice: ";
+		std::string input;
+		cin >> input;
+
+		if (IsNumber(input.c_str()))
+			choice = atoi(input.c_str());
+		else
+		{
+			choice = -1;
+			std::cout << "Invalid input, please try again" << '\n';
+			PressEnterPause();
+			continue;
+		}
 
 		Course* courses = nullptr;
 		int amount = 0;
 
 		courses = LoadCourses(&amount);
-		cin >> choice;
 		cin.ignore(); //eyad added this
 		switch (choice) {
-		case 1:addCourse();
+		case 1:ListCourses(courses,amount);
 			break;
-		case 2:ListCourses(courses, amount);
+		case 2:addCourse();
 			break;
 		case 3:UpdateCourseMenu(courses, amount);
 			break;
 		case 4:  DeleteCourseMenu(courses, &amount);
 			break;
-		case 5: cout << "Going back to main menu.\n";
+		case 0: cout << "Going back to main menu.\n";
 
 			break;
-		default:choice = 0;
+		default:choice = -1;
 			cout << "Invalid input, please try again" << '\n';
 
-
-
-
-		}if (choice != 1) {
+		}if (choice != 2) {
 
 			SaveCourses(courses, amount);
 		}

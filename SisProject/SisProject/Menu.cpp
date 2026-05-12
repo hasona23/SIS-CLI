@@ -142,27 +142,40 @@ int MainMenu() {//main menu func
 	while (!valid) {
 		ClearCmd();
 		DisplayTitle("Student information system");
-		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. User Manual" << '\n' << "5. Exit";
+		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. User Manual" << '\n' << "0. Exit";
 		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
-		cin >> choice;
-		valid = true;
+		std::string input;
+		cin >> input;
 
+		if (IsNumber(input.c_str()))
+			choice = atoi(input.c_str());
+		else
+		{
+			choice = -1;
+			std::cout << "Invalid input, please try again" << '\n';
+			PressEnterPause();
+			continue;
+		}
+		valid = true;
 		switch (choice) {
 		case 1:
 			StudentManagementMenu();
 			break;
-		case 2:CourseManagementMenu();
+		case 2:
+			CourseManagementMenu();
 			break;
-		case 3:GradesManagementMenu();
+		case 3:
+			GradesManagementMenu();
 			break;
 		case 4:
 			HelpMenu();
 			break;
-		case 5:
+		case 0:
 			cout << "Exiting, thank you for using the program." << '\n';
 			return -1;
-		default:choice = 0;
+		default:
+			choice = -1;
 			cout << "Invalid input, please try again" << '\n';
 			valid = false;
 
@@ -170,8 +183,6 @@ int MainMenu() {//main menu func
 
 
 	}
-
-
 	return choice;
 }
 
@@ -187,14 +198,7 @@ int RunSis() {
 
 		std::cout << '\n';
 		if (menuStatus == -1) isrunning = false;
-
-
-
-
 	}
-
-
-
 
 	return 0;
 }
