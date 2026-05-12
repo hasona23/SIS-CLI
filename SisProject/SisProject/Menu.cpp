@@ -142,7 +142,7 @@ int MainMenu() {//main menu func
 	while (!valid) {
 		ClearCmd();
 		DisplayTitle("Student information system");
-		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. Help" << '\n' << "5. Exit";
+		cout << "1. Student Management" << '\n' << "2. Course Management" << '\n' << "3. Grades Management" << '\n' << "4. User Manual" << '\n' << "5. Exit";
 		cout << '\n' << '\n';
 		cout << "Enter your choice: ";
 		cin >> choice;
