@@ -282,6 +282,13 @@ void AddGrade(Grade* grades, int amount)
 }
 
 void UpdateGrade(Grade* grades, int amount) {
+	if (amount == 0)
+	{
+		cout << endl << "No grades registered. Press ENTER to continue....";
+		cin.ignore();
+		cin.get();
+		return;
+	}
 	std::string studentId, courseId;
 	for (int i = 0; i < amount; i++)
 	{
@@ -434,6 +441,12 @@ void DeleteGradeByCourseId(Grade* grades, const char* courseId, int* amount) {
 	}
 }
 void DeleteGrade(Grade* grades, int* amount) {
+	if (amount == 0) {
+		cout << endl << "No grades registered. Press ENTER to continue....";
+		cin.ignore();
+		cin.get();
+		return;
+	}
 	std::string studentId, courseId;
 	cout << "Enter Student ID to delete: ";
 	cin >> studentId;
@@ -539,6 +552,15 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
 }
 void GenerateTranscript(Grade* grades, int amount)
 {
+	int studentsAmount = 0;
+	Student* students = LoadStudents(&studentsAmount);
+	if (studentsAmount == 0)
+	{
+		std::cout << "No students registered.\n";
+		PressEnterPause();
+		delete[] students;
+		return;
+	}
 	std::string studentid;
 
 	std::cout << "\nEnter Student ID: ";
@@ -546,8 +568,7 @@ void GenerateTranscript(Grade* grades, int amount)
 	toUpper(studentid.data());
 	RemoveSpaces(studentid.data());
 
-	int studentsAmount = 0;
-	Student* students = LoadStudents(&studentsAmount);
+
 	while (!StudentExists(studentid.c_str(), students, studentsAmount))
 	{
 		std::cout << "Student Id " << studentid << " Not found. Please enter valid student ID or back to exit: ";
