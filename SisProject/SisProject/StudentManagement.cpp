@@ -715,15 +715,14 @@ void AddStudentMenu(Student* students, int amount)
 	time_t currentTime_t = time(0);
 	tm* currentTime = localtime(&currentTime_t);
 	int currentYear = currentTime->tm_year + 1900;
-	std::cout << "Current Year: " << currentYear << '\n';
+	
 
 	for (int i = 0; i < amount; i++)
 	{
 		if (GetIdYearDigits(students[i].Id) == (currentYear - 2000))
 		{
 			int id = GetIdDigits(students[i].Id);
-			std::cout << id << " (-) " << maxId<<'\n';
-			
+		
 			if (id > maxId)
 				maxId = id;
 		}
