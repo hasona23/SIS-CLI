@@ -56,10 +56,10 @@ bool ValidateName(const char* name);
 bool ValidateStudent(Student student);
 
 //FILE IO ============================================
-
 void SaveStudents(const Student* students, int amount);
 void AppendStudent(const Student student);
 void CreateStudentFile();
+
 //MUST FREE MEMORY STUDENTS at the end
 Student* LoadStudents(int* amount);
 //STUDENT CRUD =======================================
