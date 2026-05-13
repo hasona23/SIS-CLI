@@ -16,7 +16,7 @@ static bool IsLeapYear(int year)
 }
 bool ValidateAge(const char* birthDateInput)
 {
-	static const int DYAS_OF_MONTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	static const int DAYS_OF_MONTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
 	char birthDate[DATE_LENGTH+1];
 	strncpy_s(birthDate, birthDateInput,DATE_LENGTH);
@@ -50,7 +50,7 @@ bool ValidateAge(const char* birthDateInput)
 		return false;
 	if (birthMonth != 2)
 	{
-		if (birthDay > DYAS_OF_MONTH[birthMonth - 1])
+		if (birthDay > DAYS_OF_MONTH[birthMonth - 1])
 			return false;
 
 	}
