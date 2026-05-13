@@ -29,7 +29,6 @@ enum Programs
 
 struct Student
 {
-public:
 	char Id[STUDENT_ID_LENGTH + 1] = "";
 	char Name[MAX_NAME_LENGTH + 1] = "";
 	char NationalId[NATIONAL_ID_LENGTH + 1] = "";

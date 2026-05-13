@@ -6,7 +6,6 @@ static const char* COURSES_FILE_PATH = "./courses.txt";
 
 struct Course
 {
-public:
 	char Id[256] = "";
 	char Title[MAX_COURSE_TITLE_LENGTH + 1] = "";
 	int CreditHours = 1;
