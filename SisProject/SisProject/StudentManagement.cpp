@@ -30,19 +30,19 @@ bool ValidateAge(const char* birthDateInput)
 	char* dayBuffer = strtok(birthDate, "/");
 	if (dayBuffer == nullptr || !IsNumber(dayBuffer) || strlen(dayBuffer)>2)
 		return false;
-	std::cout << "DAY: " << dayBuffer << '\n';
+	//std::cout << "DAY: " << dayBuffer << '\n';
 	int birthDay = atoi(dayBuffer);
 	
 	char* monthBuffer = strtok(NULL,"/");
 	if (monthBuffer == nullptr || !IsNumber(monthBuffer) || strlen(monthBuffer)>2)
 		return false;
-	std::cout << "MONTH: " << monthBuffer << '\n';
+	//std::cout << "MONTH: " << monthBuffer << '\n';
 	int birthMonth = atoi(monthBuffer);
 
 	char* yearBuffer = strtok(NULL,"/");
 	if (yearBuffer == nullptr || !IsNumber(yearBuffer) || strlen(yearBuffer) != 4)
 		return false;
-	std::cout << "YEAR: " << yearBuffer << '\n';
+	//std::cout << "YEAR: " << yearBuffer << '\n';
 	int birthYear = atoi(yearBuffer);
 
 	//Check date is valid (EX: 31/2/2009)
@@ -65,7 +65,7 @@ bool ValidateAge(const char* birthDateInput)
 				return false;
 		}
 	}
-	std::cout << "Birthdate: " << birthDay << '/' << birthMonth << '/' << birthYear << '\n';
+	
 	time_t currentTime_t = time(0);
 	tm* currentTime = localtime(&currentTime_t);
 
@@ -74,8 +74,9 @@ bool ValidateAge(const char* birthDateInput)
 	//C stores months from 0 to 11
 	int currentMonth = currentTime->tm_mon + 1;
 	int currentDay = currentTime->tm_mday;
-
-	if (currentYear < birthYear)
+	//std::cout << "Birthdate: " << birthDay << '/' << birthMonth << '/' << birthYear << '\n';
+	//std::cout << "Current date: " << currentDay << '/' << currentMonth << '/' << currentYear << '\n';
+	if ((currentYear-MIN_AGE) < birthYear)
 		return false;
 	else if (currentYear == birthYear)
 	{
@@ -700,7 +701,7 @@ void AddStudentMenu(Student* students, int amount)
 	RemoveSpaces(inputBuffer);
 	while (!ValidateAge(inputBuffer.c_str()))
 	{
-		std::cout << "Invalid BirthDate [" << inputBuffer << "]. Format DD/MM/YYYY or back to exit \n";
+		std::cout << "Invalid BirthDate [" << inputBuffer << "]. Format DD/MM/YYYY & min age 17 or back to exit \n";
 		std::cin >> inputBuffer;
 		RemoveSpaces(inputBuffer);
 		if (inputBuffer == "back")
@@ -725,8 +726,31 @@ void AddStudentMenu(Student* students, int amount)
 	maxId++;
 	if (maxId > 9999)
 	{
-		std::cout << "Reached maximum ID count.\n";
-		PressEnterPause();
+		bool foundSpace = true;
+		for (int i = 0; i < 9999; i++)
+		{
+			foundSpace = true;
+			for (int j = 0; j < amount; j++)
+			{
+				int id = GetIdDigits(students[j].Id);
+				if (id == i)
+				{
+					foundSpace = false;
+					continue;
+				}
+			}
+			if (foundSpace)
+			{
+				maxId = i;
+				break;
+			}
+		}
+		if (!foundSpace) {
+
+			std::cout << "Reached maximum ID count.\n";
+			PressEnterPause();
+			return;
+		}
 	}
 	std::string newIdStr = std::to_string(maxId);
 	int missingPaddingZeroes = 4 - newIdStr.length();
