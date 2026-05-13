@@ -85,7 +85,7 @@ Grade* LoadGrades(int* amount)
 		*amount = separators;
 		Grade* grades = new Grade[*amount];
 		int i = 0;
-		
+
 		file.clear();
 		file.seekg(0, std::ios::beg);
 		while (file.getline(buffer, 512))
@@ -99,17 +99,17 @@ Grade* LoadGrades(int* amount)
 			if (IsReadingGrade)
 			{
 				file.getline(buffer, 512);
-				strncpy_s(grades[i].StudentId, buffer,STUDENT_ID_LENGTH);
+				strncpy_s(grades[i].StudentId, buffer, STUDENT_ID_LENGTH);
 				//grades[i].StudentId[STUDENT_ID_LENGTH] = '\0';
-				
+
 				file.getline(buffer, 512);
 				strncpy_s(grades[i].CourseId, buffer, COURSE_ID_LENGTH);
 				//grades[i].CourseId[COURSE_ID_LENGTH] = '\0';
-				
+
 				file.getline(buffer, 512);
 				grades[i].MidTerm = atoi(buffer);
-				
-				file.getline(buffer,512);
+
+				file.getline(buffer, 512);
 				grades[i].Final = atoi(buffer);
 
 				i++;
@@ -152,24 +152,26 @@ static bool CourseExists(const char* courseId, Course* courses, int amount)
 
 void AddGrade(Grade* grades, int amount)
 {
-    Grade grade;
+	Grade grade;
 
-    cout << "\n=======Enter Student Grades========\n";
+	cout << "\n=======Enter Student Grades========\n";
 	int studentsAmount = 0;
 	Student* students = LoadStudents(&studentsAmount);
 
 	int coursesAmount = 0;
 	Course* courses = LoadCourses(&coursesAmount);
-    cout << "Enter Student id: ";
-    cin >> grade.StudentId;
+	cout << "Enter Student id: ";
+	cin >> grade.StudentId;
+	RemoveSpaces(grade.StudentId);
 	toUpper(grade.StudentId);
 	while (!StudentExists(grade.StudentId, students, studentsAmount))
 	{
 		cout << "Student with id " << grade.StudentId << " not found. Please enter a valid student id.\n";
 		cout << "Enter Student id (back to exit): ";
 		cin >> grade.StudentId;
+		RemoveSpaces(grade.StudentId);
 		toUpper(grade.StudentId);
-		if (grade.StudentId == "BACK")
+		if (strcmp(grade.CourseId, "BACK") == 0)
 		{
 			cout << "Going back to menu...\n";
 			delete[] students;
@@ -177,16 +179,18 @@ void AddGrade(Grade* grades, int amount)
 			return;
 		}
 	}
-    cout << "Enter Course code: ";
-    cin >> grade.CourseId;
+	cout << "Enter Course code: ";
+	cin >> grade.CourseId;
+	RemoveSpaces(grade.CourseId);
 	toUpper(grade.CourseId);
 	while (!CourseExists(grade.CourseId, courses, coursesAmount))
 	{
 		cout << "Course with code " << grade.CourseId << " not found. Please enter a valid course code.\n";
 		cout << "Enter Course code (back to exit): ";
 		cin >> grade.CourseId;
+		RemoveSpaces(grade.CourseId);
 		toUpper(grade.CourseId);
-		if (grade.CourseId == "BACK")
+		if (strcmp(grade.CourseId, "BACK") == 0)
 		{
 			cout << "Going back to menu...\n";
 			delete[] courses;
@@ -205,66 +209,100 @@ void AddGrade(Grade* grades, int amount)
 			return;
 		}
 	}
-    do
-    {
-        cout << "Enter Midterm Grade(0:40): ";
-        cin >> grade.MidTerm;
+	do
+	{
+		cout << "Enter Midterm Grade(0:40): ";
+		cin >> grade.MidTerm;
 
-        if (grade.MidTerm < 0 || grade.MidTerm > 40)
-        {
-            cout << "Invalid Midterm Grade!\n";
-        }
+		if (grade.MidTerm < 0 || grade.MidTerm > 40)
+		{
+			cout << "Invalid Midterm Grade!\n";
+		}
 
-    } while (grade.MidTerm < 0 || grade.MidTerm > 40);
+	} while (grade.MidTerm < 0 || grade.MidTerm > 40);
 
-    do
-    {
-        cout << "Enter Final Grade(0:60): ";
-        cin >> grade.Final;
+	do
+	{
+		cout << "Enter Final Grade(0:60): ";
+		cin >> grade.Final;
 
-        if (grade.Final < 0 || grade.Final > 60)
-        {
-            cout << "Invalid Final Grade!\n";
-        }
+		if (grade.Final < 0 || grade.Final > 60)
+		{
+			cout << "Invalid Final Grade!\n";
+		}
 
-    } while (grade.Final < 0 || grade.Final > 60);
+	} while (grade.Final < 0 || grade.Final > 60);
 
 	AppendGrade(&grade);
 
-    int total = grade.MidTerm + grade.Final;
+	int total = grade.MidTerm + grade.Final;
 	cout << "\n=======Grade Summary========\n";
 	cout << "Student ID = " << grade.StudentId << '\n';
 	cout << "Course ID = " << grade.CourseId << '\n';
 	cout << "Midterm = " << grade.MidTerm << "/40 \n";
 	cout << "Final = " << grade.Final << "/60 \n";
 	cout << "The Toltal = " << total << "/100 \n";
-    cout << "Garde Added Successfully\n";
+	cout << "GPA = " << GetGpaGrade(total) << " / 4.0 \n";
+	cout << "Grade = " << GetGpaLetter(total) << '\n';
+	cout << "Garde Added Successfully\n";
 	PressEnterPause();
 	delete[] students;
 	delete[] courses;
 }
-
-void UpdateGrade(Grade* grades,int amount) {
+std::string GetGpaLetter(int totalGrade)
+{
+	if(totalGrade >= 97)
+		return "A+";
+	else if (totalGrade >= 93)
+		return "A";
+	else if (totalGrade >= 90)
+		return "A-";
+	else if (totalGrade >= 87)
+		return "B+";
+	else if (totalGrade >= 83)
+		return "B";
+	else if (totalGrade >= 80)
+		return "B-";
+	else if (totalGrade >= 77)
+		return "C+";
+	else if (totalGrade >= 73)
+		return "C";
+	else if (totalGrade >= 70)
+		return "C-";
+	else if (totalGrade >= 67)
+		return "D+";
+	else if (totalGrade >= 65)
+		return "D";
+	else
+		return "F";
+}
+static float GetGpaGrade(int totalGrade)
+{
+	return (totalGrade/100.0)*4.0;
+}
+void UpdateGrade(Grade* grades, int amount) {
 	std::string studentId, courseId;
 	for (int i = 0; i < amount; i++)
 	{
-		std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " -> "<<grades[i].MidTerm<<" - "<<grades[i].Final << '\n';
+		std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " -> " << grades[i].MidTerm << " - " << grades[i].Final << '\n';
 	}
 
 	cout << "Enter Student ID: ";
 	cin >> studentId;
+	RemoveSpaces(studentId.data());
 	toUpper(studentId.data());
 	cout << "Enter Course ID: ";
 	cin >> courseId;
+	RemoveSpaces(courseId.data());
 	toUpper(courseId.data());
 
 	bool found = false;
 
 	for (int i = 0; i < amount; i++) {
 
-		if (grades[i].StudentId == studentId &&grades[i].CourseId==courseId)
+		if (grades[i].StudentId == studentId && grades[i].CourseId == courseId)
 		{
-			
+
 			do {
 				std::cout << "Enter New Midterm Grade (0 - 40): ";
 				cin >> grades[i].MidTerm;
@@ -274,7 +312,7 @@ void UpdateGrade(Grade* grades,int amount) {
 				std::cout << "Enter New Final Grade (0 - 60): ";
 				cin >> grades[i].Final;
 			} while (grades[i].Final < 0 || grades[i].Final > 60);
-			
+
 
 			found = true;
 			break;
@@ -294,21 +332,38 @@ void ShowGrades(Grade* grades, int amount) {
 		return;
 	}
 	std::string studentId, courseId;
-	do {
-		std::cout << "Enter Student ID to filter (or 0 to skip): ";
+
+	std::cout << "Enter Student ID to filter (or 0 to skip): ";
+	std::cin >> studentId;
+	RemoveSpaces(studentId.data());
+	toUpper(studentId.data());
+	while (!ValidateStudentId(studentId.data()) && studentId != "0")
+	{
+		std::cout << "Invalid Student ID. Please enter a valid Student ID or 0 to skip: ";
 		std::cin >> studentId;
-	} while (!ValidateStudentId(studentId.c_str()) && studentId != "0");
-	do {
-		std::cout << "Enter Course ID to filter (or 0 to skip): ";
+		RemoveSpaces(studentId.data());
+		toUpper(studentId.data());
+	}
+
+	std::cout << "Enter Course ID to filter (or 0 to skip): ";
+	std::cin >> courseId;
+	RemoveSpaces(courseId.data());
+	toUpper(courseId.data());
+	while (!ValidateCourseId(courseId.data()) && courseId != "0")
+	{
+		std::cout << "Invalid Course ID. Please enter a valid Course ID or 0 to skip: ";
 		std::cin >> courseId;
-	} while (!ValidateCourseId(courseId.data()) && courseId != "0");
+		RemoveSpaces(courseId.data());
+		toUpper(courseId.data());
+	}
 
 	for (int i = 0; i < amount; i++)
 	{
 		bool matchesStudent = (studentId == "0" || grades[i].StudentId == studentId);
 		bool matchesCourse = (courseId == "0" || grades[i].CourseId == courseId);
 		if (matchesStudent && matchesCourse)
-			std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " -> " << grades[i].MidTerm << " - " << grades[i].Final << '\n';
+			std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " -> " << grades[i].MidTerm << " - "
+			<< grades[i].Final << "- "<<GetGpaLetter(grades[i].MidTerm+grades[i].Final) << '\n';
 	}
 	PressEnterPause();
 }
@@ -334,13 +389,15 @@ void DeleteGradeByCourseId(Grade* grades, const char* courseId, int* amount) {
 		}
 	}
 }
-void DeleteGrade(Grade* grades,int* amount) {
+void DeleteGrade(Grade* grades, int* amount) {
 	std::string studentId, courseId;
 	cout << "Enter Student ID to delete: ";
 	cin >> studentId;
+	RemoveSpaces(studentId.data());
 	toUpper(studentId.data());
 	cout << "Enter Course ID to delete: ";
 	cin >> courseId;
+	RemoveSpaces(courseId.data());
 	toUpper(courseId.data());
 
 	int foundIndex = -1;
@@ -364,17 +421,17 @@ void DeleteGrade(Grade* grades,int* amount) {
 
 double CalculateGpa(std::string studentId, Grade* grades, int amount)
 {
-    int coursesAmount = 0;
+	int coursesAmount = 0;
 
 	double totalGrades = 0;
 	double totalHours = 0;
 
 	Course* courses = LoadCourses(&coursesAmount);
 
-    for (int i = 0; i < amount; i++)
-    {
-        if (grades[i].StudentId == studentId)
-        {
+	for (int i = 0; i < amount; i++)
+	{
+		if (grades[i].StudentId == studentId)
+		{
 			Course* course = nullptr;
 			for (int j = 0; j < coursesAmount; j++)
 			{
@@ -391,45 +448,49 @@ double CalculateGpa(std::string studentId, Grade* grades, int amount)
 				delete[] courses;
 				return -1;
 			}
-            int total = grades[i].MidTerm + grades[i].Final;
+			int total = grades[i].MidTerm + grades[i].Final;
 			totalGrades += total * course->CreditHours;
 			totalHours += course->CreditHours;
-        }
-    }
+		}
+	}
 	delete[] courses;
-    if (totalHours == 0)
-    {
-        return 0;
-    }
+	if (totalHours == 0)
+	{
+		return 0;
+	}
 	//GPA is out of 4
-    return totalGrades/totalHours * (4.0/100);
+	return totalGrades / totalHours * (4.0 / 100);
 }
 void GenerateTranscript(Grade* grades, int amount)
 {
-    std::string studentid;
-	
-    std::cout << "\nEnter Student ID: ";
-    std::cin >> studentid;
+	std::string studentid;
+
+	std::cout << "\nEnter Student ID: ";
+	std::cin >> studentid;
 	toUpper(studentid.data());
-    std::cout << "\n====STUDENT TRANSCRIPT====\n";
+	std::cout << "\n====STUDENT TRANSCRIPT====\n";
 	bool hasGrades = false;
-    for (int i = 0; i < amount; i++)
-    {
-        if (grades[i].StudentId == studentid)
-        {
-            int total = grades[i].MidTerm + grades[i].Final;
+	for (int i = 0; i < amount; i++)
+	{
+		if (grades[i].StudentId == studentid)
+		{
+			int total = grades[i].MidTerm + grades[i].Final;
 			std::cout << "-------------------\n";
-			std::cout << "course code: " << grades[i].CourseId<<'\n';
-           std::cout << "Midterm: " << grades[i].MidTerm << '\n';
-           std::cout << "Final exam: " << grades[i].Final << '\n';
-           std::cout << "Total: " << total << '\n';
-           std::cout << "--------------------\n";
-		   hasGrades = true;
-        }
-    }
-	if (hasGrades) 
+			std::cout << "course code: " << grades[i].CourseId << '\n';
+			std::cout << "Midterm: " << grades[i].MidTerm << '\n';
+			std::cout << "Final exam: " << grades[i].Final << '\n';
+			std::cout << "Total: " << total << '\n';
+			cout << "The Toltal = " << total << "/100 \n";
+			cout << "GPA = " << GetGpaGrade(total) << " / 4.0 \n";
+			cout << "Grade = " << GetGpaLetter(total) << '\n';
+			std::cout << "--------------------\n";
+			hasGrades = true;
+		}
+	}
+	if (hasGrades)
 	{
 		std::cout << "\nGPA = " << CalculateGpa(studentid, grades, amount) << '\n';
+		std::cout << "Grade = " << GetGpaLetter(CalculateGpa(studentid, grades, amount) * 100 / 4.0) << '\n';
 		int coursesAmount = 0;
 		Course* courses = LoadCourses(&coursesAmount);
 		int totalHours = 0;
@@ -450,17 +511,17 @@ void GenerateTranscript(Grade* grades, int amount)
 		delete[] courses;
 		std::cout << "Total Credit Hours: " << totalHours << '\n';
 	}
-	
+
 	else
 	{
 		int studentsAmount = 0;
 		Student* students = LoadStudents(&studentsAmount);
 
-		if(StudentExists(studentid.c_str(),students,studentsAmount))
+		if (StudentExists(studentid.c_str(), students, studentsAmount))
 			std::cout << "No grades found for student with ID " << studentid << '\n';
 		else
 			std::cout << "No student found with ID " << studentid << '\n';
 	}
 	PressEnterPause();
-	
+
 }

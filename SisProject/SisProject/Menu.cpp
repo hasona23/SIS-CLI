@@ -2,10 +2,12 @@
 #include "GradesManagement.h"
 #include <string>
 #include "Utils.h"
+#include "SeedData.h"
+
 
 int StudentManagementMenu() {//studmng menu
 
-
+	
 	int choice = -1;
 
 	while (choice != 0) {
@@ -366,6 +368,8 @@ int RunSis() {
 	CreateStudentFile();
 	CreateCoursesFile();
 	CreateGradesFile();
+	SeedIfEmpty();
+	ClearCmd();
 	bool isrunning = true;
 
 	while (isrunning) {

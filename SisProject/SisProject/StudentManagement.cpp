@@ -16,30 +16,30 @@ static bool IsLeapYear(int year)
 }
 bool ValidateAge(const char* birthDateInput)
 {
-	static const int DAYS_OF_MONTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	static const int DAYS_OF_MONTH[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
 
-	char birthDate[DATE_LENGTH+1];
-	strncpy_s(birthDate, birthDateInput,DATE_LENGTH);
+	char birthDate[DATE_LENGTH + 1];
+	strncpy_s(birthDate, birthDateInput, DATE_LENGTH);
 	birthDate[DATE_LENGTH] = '\0';
 
 	for (int i = 0; birthDateInput[i] != '\0'; i++)
 	{
-		if(birthDate[i]=='\\' || birthDate[i]=='_' || birthDate[i]=='-' || birthDate[i]=='.')
+		if (birthDate[i] == '\\' || birthDate[i] == '_' || birthDate[i] == '-' || birthDate[i] == '.')
 			birthDate[i] = '/';
 	}
 	char* dayBuffer = strtok(birthDate, "/");
-	if (dayBuffer == nullptr || !IsNumber(dayBuffer) || strlen(dayBuffer)>2)
+	if (dayBuffer == nullptr || !IsNumber(dayBuffer) || strlen(dayBuffer) > 2)
 		return false;
 	//std::cout << "DAY: " << dayBuffer << '\n';
 	int birthDay = atoi(dayBuffer);
-	
-	char* monthBuffer = strtok(NULL,"/");
-	if (monthBuffer == nullptr || !IsNumber(monthBuffer) || strlen(monthBuffer)>2)
+
+	char* monthBuffer = strtok(NULL, "/");
+	if (monthBuffer == nullptr || !IsNumber(monthBuffer) || strlen(monthBuffer) > 2)
 		return false;
 	//std::cout << "MONTH: " << monthBuffer << '\n';
 	int birthMonth = atoi(monthBuffer);
 
-	char* yearBuffer = strtok(NULL,"/");
+	char* yearBuffer = strtok(NULL, "/");
 	if (yearBuffer == nullptr || !IsNumber(yearBuffer) || strlen(yearBuffer) != 4)
 		return false;
 	//std::cout << "YEAR: " << yearBuffer << '\n';
@@ -65,7 +65,7 @@ bool ValidateAge(const char* birthDateInput)
 				return false;
 		}
 	}
-	
+
 	time_t currentTime_t = time(0);
 	tm* currentTime = localtime(&currentTime_t);
 
@@ -74,10 +74,10 @@ bool ValidateAge(const char* birthDateInput)
 	//C stores months from 0 to 11
 	int currentMonth = currentTime->tm_mon + 1;
 	int currentDay = currentTime->tm_mday;
-	
-	if ((currentYear-MIN_AGE) < birthYear)
+
+	if ((currentYear - MIN_AGE) < birthYear)
 		return false;
-	else if ((currentYear-MIN_AGE) == birthYear)
+	else if ((currentYear - MIN_AGE) == birthYear)
 	{
 		if (currentMonth < birthMonth)
 			return false;
@@ -87,7 +87,7 @@ bool ValidateAge(const char* birthDateInput)
 				return false;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -375,6 +375,7 @@ static void PrintStudent(const Student* student) {
 	std::cout << "Program      : " << ProgramsStr[student->Program - 1] << "\n";
 	std::cout << "Level        : " << student->Level << "\n";
 	std::cout << "GPA          : " << student->Gpa << "\n";
+	std::cout << "Grade        : " << GetGpaLetter(student->Gpa * 25) << '\n';
 	std::cout << "Birthdate    : " << student->BirthDate << "\n";
 	std::cout << "========================\n";
 }
@@ -408,7 +409,13 @@ static int GetIdDigits(const char* id)
 	}
 	return amount;
 }
-
+static int GetIdYearDigits(const char* id)
+{
+	int amount = 0;
+	amount += ((id[0] - '0') * 10);
+	amount += (id[1] - '0');
+	return amount;
+}
 static void SortStudentsById(Student* students, int amount)
 {
 	bool hasSwapped = true;
@@ -703,38 +710,48 @@ void AddStudentMenu(Student* students, int amount)
 	strncpy_s(student.BirthDate, inputBuffer.c_str(), DATE_LENGTH);
 
 	int maxId = 0;
+	time_t currentTime_t = time(0);
+	tm* currentTime = localtime(&currentTime_t);
+	int currentYear = currentTime->tm_year + 1900;
+	delete currentTime;
 	for (int i = 0; i < amount; i++)
 	{
-		//25p0000
-		std::string idStr = std::string(students[i].Id);
-		int id = stoi(idStr.substr(3, 4));
-		if (id > maxId)
-			maxId = id;
+		// currentYear -2000 to get the year digits in the id and compare it with current year to get the students of the same year and assign id in sequence for them
+		if (GetIdYearDigits(students[i].Id) == (currentYear - 2000))
+		{
+
+
+			int id = GetIdDigits(students[i].Id);
+			if (id > maxId)
+				maxId = id;
+		}
 	}
 	//To get next id in sequence;
 	maxId++;
 	if (maxId > 9999)
 	{
-		bool foundSpace = true;
+		bool foundGap = true;
 		for (int i = 0; i < 9999; i++)
 		{
-			foundSpace = true;
+			foundGap = true;
 			for (int j = 0; j < amount; j++)
 			{
+				if (GetIdYearDigits(students[j].Id) != (currentYear - 2000))
+					continue;
 				int id = GetIdDigits(students[j].Id);
 				if (id == i)
 				{
-					foundSpace = false;
+					foundGap = false;
 					continue;
 				}
 			}
-			if (foundSpace)
+			if (foundGap)
 			{
 				maxId = i;
 				break;
 			}
 		}
-		if (!foundSpace) {
+		if (!foundGap) {
 
 			std::cout << "Reached maximum ID count.\n";
 			PressEnterPause();
@@ -747,7 +764,7 @@ void AddStudentMenu(Student* students, int amount)
 	{
 		newIdStr = "0" + newIdStr;
 	}
-	std::string newId = "25P" + newIdStr;
+	std::string newId = std::to_string(currentYear - 2000) + "P" + newIdStr;
 	std::cout << "Student Id: " << newId << '\n';
 	strncpy_s(student.Id, newId.c_str(), STUDENT_ID_LENGTH);
 	PrintStudent(&student);
@@ -928,7 +945,7 @@ void DeleteStudentMenu(Student* students, int* amount)
 		std::cout << "Student Deleted Successfully\n";
 		PressEnterPause();
 	}
-	else 
+	else
 		return;
 
 }

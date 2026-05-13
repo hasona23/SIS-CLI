@@ -11,7 +11,6 @@ static const int MIN_AGE = 17;
 static const char* STUDENT_FILE_PATH = "./student.txt";
 static const int MAX_NAME_LENGTH = 256;
 static const int DATE_LENGTH = 10;
-
 static const int MAX_LEVEL = 4;
 static const int MIN_LEVEL = 1;
 

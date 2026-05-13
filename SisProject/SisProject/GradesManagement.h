@@ -33,7 +33,7 @@ void AddGrade(Grade* grades,int amount);
 void UpdateGrade(Grade* grades, int amount);
 void DeleteGrade(Grade* grades, int* amount);
 void ShowGrades(Grade* grades, int amount);
-
+std::string GetGpaLetter(int total);
 double CalculateGpa(std::string studentid, Grade* grades, int amount);
 void GenerateTranscript(Grade* grades, int amount);
 
