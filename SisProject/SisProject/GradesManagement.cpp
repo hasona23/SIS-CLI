@@ -188,9 +188,22 @@ void AddGrade(Grade* grades, int amount)
 	cout << "\n=======Enter Student Grades========\n";
 	int studentsAmount = 0;
 	Student* students = LoadStudents(&studentsAmount);
-
+	if (studentsAmount == 0)
+	{
+		std::cout << "No students registered. Please add students before adding grades.\n";
+		PressEnterPause();
+		delete[] students;
+	}
 	int coursesAmount = 0;
 	Course* courses = LoadCourses(&coursesAmount);
+	if (coursesAmount == 0)
+	{
+		std::cout << "No courses registered. Please add courses before adding grades.\n";
+		PressEnterPause();
+		delete[] students;
+		delete[] courses;
+		return;
+	}
 	cout << "Enter Student id: ";
 	cin >> grade.StudentId;
 	RemoveSpaces(grade.StudentId);
