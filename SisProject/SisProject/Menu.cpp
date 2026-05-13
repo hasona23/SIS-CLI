@@ -185,7 +185,7 @@ int GradesManagementMenu() {//grades mng menu
 	return choice;
 
 }
-static void UserManualMenu()
+void UserManualMenu()
 {
 	int choice = 0;
 
@@ -272,13 +272,21 @@ static void UserManualMenu()
 			std::cout << "  Enter a student ID to display all their recorded courses,\n";
 			std::cout << "  showing Midterm, Final, and Total for each, followed by GPA.\n\n";
 
-			std::cout << "GPA Scale\n";
-			std::cout << "  90 - 100  =>  4.0\n";
-			std::cout << "  80 -  89  =>  3.0\n";
-			std::cout << "  70 -  79  =>  2.0\n";
-			std::cout << "  60 -  69  =>  1.0\n";
-			std::cout << "  Below 60  =>  0.0\n";
-			std::cout << "  GPA is the average points across all recorded courses.\n";
+			std::cout << "GPA Calculation\n";
+			std::cout << "(Subject Gpa * Subject credit hours) / sum of credit hours";
+			std::cout << "  97 - 100  =>  A+ \n";
+			std::cout << "  93 -  96  =>  A  \n";
+			std::cout << "  90 -  92  =>  A- \n";
+			std::cout << "  87 -  92  =>  B+ \n";
+			std::cout << "  83 -  86  =>  B  \n";
+			std::cout << "  80 -  82  =>  B- \n";
+			std::cout << "  77 -  79  =>  C+ \n";
+			std::cout << "  73 -  76  =>  C  \n";
+			std::cout << "  70 -  72  =>  C- \n";
+			std::cout << "  67 -  69  =>  D+ \n";
+			std::cout << "  65 -  66  =>  D  \n";
+			std::cout << "  Below 65 =>  F  \n\n";
+			std::cout << "  Cummulative GPA is the average points across all recorded courses.\n";
 			break;
 
 		case 4:
