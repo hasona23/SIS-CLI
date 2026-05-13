@@ -122,16 +122,11 @@ int CourseManagementMenu() {//course management menu
 		}
 		delete[] courses;
 	}
-
 	return choice;
-
-
 }
 
 
 int GradesManagementMenu() {//grades mng menu
-
-
 	int choice = -1;
 	while (choice != 0) {
 		ClearCmd();

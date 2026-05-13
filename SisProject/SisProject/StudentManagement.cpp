@@ -925,8 +925,12 @@ void DeleteStudentMenu(Student* students, int* amount)
 		delete[] grades;
 
 		DeleteStudent(removeIndex, students, amount);
+		std::cout << "Student Deleted Successfully\n";
+		PressEnterPause();
 	}
-	else return;
+	else 
+		return;
+
 }
 void UpdateStudentMenu(Student* students, int amount)
 {
@@ -1025,6 +1029,10 @@ void UpdateStudentMenu(Student* students, int amount)
 
 
 	UpdateStudent(&students[index], newName.c_str(), newPhone.c_str(), program, level);
+	std::cout << "Student Updated Successfully\n";
+	std::cout << "New Student Data:\n";
+	PrintStudent(&students[index]);
+	PressEnterPause();
 }
 
 
