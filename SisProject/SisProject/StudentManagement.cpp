@@ -105,11 +105,8 @@ bool ValidatePhoneNumber(const char* num)
 	//Check for egypt phone codes
 	if (num[2] != '0' && num[2] != '1' && num[2] != '2' && num[2] != '5')
 		return false;
-	for (int i = 3; i < strlen(num); i++)
-	{
-		if (!isalnum(num[i]))
-			return false;
-	}
+	if (!IsNumber(num))
+		return false;
 	return true;
 }
 
@@ -136,11 +133,8 @@ bool ValidateNationalId(const char* id)
 {
 	if (strlen(id) != NATIONAL_ID_LENGTH)
 		return false;
-	for (int i = 0; i < strlen(id); i++)
-	{
-		if (!isalnum(id[i]))
-			return false;
-	}
+	if (!IsNumber(id))
+		return false;
 	return true;
 }
 bool ValidateStudentId(const char* id)
