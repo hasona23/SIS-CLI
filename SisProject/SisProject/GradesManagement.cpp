@@ -202,7 +202,7 @@ void AddGrade(Grade* grades, int amount)
 		cin >> grade.StudentId;
 		RemoveSpaces(grade.StudentId);
 		toUpper(grade.StudentId);
-		if (strcmp(grade.CourseId, "BACK") == 0)
+		if (strcmp(grade.StudentId, "BACK") == 0)
 		{
 			cout << "Going back to menu...\n";
 			delete[] students;
@@ -292,11 +292,43 @@ void UpdateGrade(Grade* grades, int amount) {
 	cin >> studentId;
 	RemoveSpaces(studentId.data());
 	toUpper(studentId.data());
+
+	int studentsCount = 0;
+	Student* students = LoadStudents(&studentsCount);
+	while (!StudentExists(studentId.c_str(), students, studentsCount))
+	{
+		std::cout << "Student Id " << studentId << " Not found. Please enter valid student ID or back to exit: ";
+		cin >> studentId;
+		RemoveSpaces(studentId.data());
+		toUpper(studentId.data());
+		if (studentId == "BACK")
+		{
+			std::cout << "Going back to menu...\n";
+			delete[] students;
+			return;
+		}
+	}
+	delete[] students;
 	cout << "Enter Course ID: ";
 	cin >> courseId;
 	RemoveSpaces(courseId.data());
 	toUpper(courseId.data());
-
+	int coursesCount = 0;
+	Course* courses = LoadCourses(&coursesCount);
+	while (!CourseExists(courseId.c_str(), courses, coursesCount))
+	{
+		std::cout << "Course ID " << courseId << " doesnt exist. Enter valid course ID or back to exit: ";
+		cin >> courseId;
+		RemoveSpaces(courseId.data());
+		toUpper(courseId.data());
+		if (courseId == "BACK")
+		{
+			std::cout << "Going back to menu...\n";
+			delete[] courses;
+			return;
+		}
+	}
+	delete[] courses;
 	bool found = false;
 
 	for (int i = 0; i < amount; i++) {
@@ -338,34 +370,45 @@ void ShowGrades(Grade* grades, int amount) {
 	std::cin >> studentId;
 	RemoveSpaces(studentId.data());
 	toUpper(studentId.data());
-	while (!ValidateStudentId(studentId.data()) && studentId != "0")
+	int studentsAmount = 0;
+	Student* students = LoadStudents(&studentsAmount);
+	while (!StudentExists(studentId.c_str(), students, studentsAmount) && studentId != "0")
 	{
-		std::cout << "Invalid Student ID. Please enter a valid Student ID or 0 to skip: ";
+		std::cout << "Student Id " << studentId << " Not found. Please enter valid student ID or 0 to skip: ";
+
 		std::cin >> studentId;
 		RemoveSpaces(studentId.data());
 		toUpper(studentId.data());
 	}
-
+	delete[] students;
 	std::cout << "Enter Course ID to filter (or 0 to skip): ";
 	std::cin >> courseId;
 	RemoveSpaces(courseId.data());
 	toUpper(courseId.data());
-	while (!ValidateCourseId(courseId.data()) && courseId != "0")
+	int coursesAmount = 0;
+	Course* courses = LoadCourses(&coursesAmount);
+	while (!CourseExists(courseId.c_str(), courses, coursesAmount) && courseId != "0")
 	{
-		std::cout << "Invalid Course ID. Please enter a valid Course ID or 0 to skip: ";
+
+		std::cout << "Course ID " << courseId << " doesnt exist. Enter valid course ID or press 0 to skip: ";
 		std::cin >> courseId;
 		RemoveSpaces(courseId.data());
 		toUpper(courseId.data());
 	}
-
+	delete[] courses;
+	bool foundGrades = false;
 	for (int i = 0; i < amount; i++)
 	{
 		bool matchesStudent = (studentId == "0" || grades[i].StudentId == studentId);
 		bool matchesCourse = (courseId == "0" || grades[i].CourseId == courseId);
-		if (matchesStudent && matchesCourse)
-			std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " -> " << grades[i].MidTerm << " - "
-			<< grades[i].Final << "- "<<GetGpaLetter(grades[i].MidTerm+grades[i].Final) << '\n';
+		if (matchesStudent && matchesCourse) {
+			std::cout << (i + 1) << ") " << grades[i].StudentId << " - " << grades[i].CourseId << " => " << grades[i].MidTerm << ", "
+				<< grades[i].Final << ", " << GetGpaLetter(grades[i].MidTerm + grades[i].Final) << '\n';
+			foundGrades = true;
+		}
 	}
+	if (!foundGrades)
+		std::cout << "No grades found";
 	PressEnterPause();
 }
 static void DeleteGradeAtIndex(Grade* grades, int index, int* amount) {
@@ -396,11 +439,42 @@ void DeleteGrade(Grade* grades, int* amount) {
 	cin >> studentId;
 	RemoveSpaces(studentId.data());
 	toUpper(studentId.data());
+	int studentsAmount = 0;
+	Student* students = LoadStudents(&studentsAmount);
+	while (!StudentExists(studentId.c_str(), students, studentsAmount))
+	{
+		std::cout << "Student Id " << studentId << " Not found. Please enter valid student ID or back to exit: ";
+		cin >> studentId;
+		RemoveSpaces(studentId.data());
+		toUpper(studentId.data());
+		if (studentId == "BACK")
+		{
+			std::cout << "Going back to menu...\n";
+			delete[] students;
+			return;
+		}
+	}
+	delete[] students;
 	cout << "Enter Course ID to delete: ";
 	cin >> courseId;
 	RemoveSpaces(courseId.data());
 	toUpper(courseId.data());
-
+	int coursesAmount = 0;
+	Course* courses = LoadCourses(&coursesAmount);
+	while (!CourseExists(courseId.c_str(), courses, coursesAmount))
+	{
+		std::cout << "Course ID " << courseId << " doesnt exist. Enter valid course ID or back to exit: ";
+		cin >> courseId;
+		RemoveSpaces(courseId.data());
+		toUpper(courseId.data());
+		if (courseId == "BACK")
+		{
+			std::cout << "Going back to menu...\n";
+			delete[] courses;
+			return;
+		}
+	}
+	delete[] courses;
 	int foundIndex = -1;
 
 	for (int i = 0; i < *amount; i++) {
@@ -418,6 +492,7 @@ void DeleteGrade(Grade* grades, int* amount) {
 	else {
 		cout << "Record not found." << endl;
 	}
+	PressEnterPause();
 }
 
 double CalculateGpa(std::string studentId, Grade* grades, int amount)
@@ -469,31 +544,75 @@ void GenerateTranscript(Grade* grades, int amount)
 	std::cout << "\nEnter Student ID: ";
 	std::cin >> studentid;
 	toUpper(studentid.data());
-	std::cout << "\n====STUDENT TRANSCRIPT====\n";
+	RemoveSpaces(studentid.data());
+
+	int studentsAmount = 0;
+	Student* students = LoadStudents(&studentsAmount);
+	while (!StudentExists(studentid.c_str(), students, studentsAmount))
+	{
+		std::cout << "Student Id " << studentid << " Not found. Please enter valid student ID or back to exit: ";
+		std::cin >> studentid;
+		toUpper(studentid.data());
+		RemoveSpaces(studentid.data());
+		if (studentid == "BACK")
+		{
+			std::cout << "Going back to menu...\n";
+			delete[] students;
+			return;
+		}
+	}
+	delete[] students;
+	DisplayTitle(std::string("Transcript - " + studentid).c_str());
 	bool hasGrades = false;
+	const static int LINE_LENGTH = 50;
+	int coursesAmount = 0;
+	Course* courses = LoadCourses(&coursesAmount);
 	for (int i = 0; i < amount; i++)
 	{
 		if (grades[i].StudentId == studentid)
 		{
+			Course* course = nullptr;
+			for (int j = 0; j < coursesAmount; j++)
+			{
+				if (strcmp(courses[j].Id, grades[i].CourseId) == 0)
+				{
+					course = &courses[j];
+					break;
+				}
+			}
+			if (course == nullptr)
+			{
+				std::cout << "Error generating transcript. Course with code " << grades[i].CourseId << " not found.\n";
+				PressEnterPause();
+				delete[] courses;
+				return;
+			}
 			int total = grades[i].MidTerm + grades[i].Final;
-			std::cout << "-------------------\n";
-			std::cout << "course code: " << grades[i].CourseId << '\n';
-			std::cout << "Midterm: " << grades[i].MidTerm << '\n';
-			std::cout << "Final exam: " << grades[i].Final << '\n';
-			std::cout << "Total: " << total << '\n';
-			cout << "The Toltal = " << total << "/100 \n";
-			cout << "GPA = " << GetGpaGrade(total) << " / 4.0 \n";
-			cout << "Grade = " << GetGpaLetter(total) << '\n';
-			std::cout << "--------------------\n";
+			for (int x = 0; x < LINE_LENGTH; x++)
+				cout << ASCII_HORIZONTAL_LINE;
+			cout << '\n';
+			std::cout << "Course       : " << grades[i].CourseId << " - " << course->Title << '\n';
+			std::cout << "Credit Hours : " << course->CreditHours << '\n';
+			std::cout << "Midterm      : " << grades[i].MidTerm << "/40" << '\n';
+			std::cout << "Final exam   : " << grades[i].Final << "/60" << '\n';
+			std::cout << "The Toltal   : " << total << "/100 \n";
+			std::cout << "GPA          : " << GetGpaGrade(total) << " / 4.0 \n";
+			std::cout << "Grade        : " << GetGpaLetter(total) << '\n';
+
+			for (int x = 0; x < LINE_LENGTH; x++)
+				cout << ASCII_HORIZONTAL_LINE;
+			cout << '\n';
 			hasGrades = true;
 		}
 	}
+
 	if (hasGrades)
 	{
-		std::cout << "\nGPA = " << CalculateGpa(studentid, grades, amount) << '\n';
-		std::cout << "Grade = " << GetGpaLetter(CalculateGpa(studentid, grades, amount) * 100 / 4.0) << '\n';
-		int coursesAmount = 0;
-		Course* courses = LoadCourses(&coursesAmount);
+
+		std::cout << "\nSummary\n";
+		std::cout << "GPA          : " << CalculateGpa(studentid, grades, amount) << '\n';
+		std::cout << "Grade        : " << GetGpaLetter(CalculateGpa(studentid, grades, amount) * 100 / 4.0) << '\n';
+
 		int totalHours = 0;
 		for (int i = 0; i < amount; i++)
 		{
@@ -509,20 +628,14 @@ void GenerateTranscript(Grade* grades, int amount)
 				}
 			}
 		}
-		delete[] courses;
-		std::cout << "Total Credit Hours: " << totalHours << '\n';
+
+		std::cout << "Total Credit Hours: " << totalHours << "\n\n\n";
 	}
 
 	else
 	{
-		int studentsAmount = 0;
-		Student* students = LoadStudents(&studentsAmount);
-
-		if (StudentExists(studentid.c_str(), students, studentsAmount))
-			std::cout << "No grades found for student with ID " << studentid << '\n';
-		else
-			std::cout << "No student found with ID " << studentid << '\n';
+		std::cout << "No grades found for student with ID " << studentid << '\n';
 	}
 	PressEnterPause();
-
+	delete[] courses;
 }

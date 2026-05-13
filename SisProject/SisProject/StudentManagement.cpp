@@ -14,20 +14,17 @@ static bool IsLeapYear(int year)
 {
 	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
-bool ValidateAge(const char* birthDateInput)
+bool ValidateAge(char* birthDateInput)
 {
 	static const int DAYS_OF_MONTH[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-
-	char birthDate[DATE_LENGTH + 1];
-	strncpy_s(birthDate, birthDateInput, DATE_LENGTH);
-	birthDate[DATE_LENGTH] = '\0';
-
+	if (strlen(birthDateInput) > DATE_LENGTH)
+		return false;
 	for (int i = 0; birthDateInput[i] != '\0'; i++)
 	{
-		if (birthDate[i] == '\\' || birthDate[i] == '_' || birthDate[i] == '-' || birthDate[i] == '.')
-			birthDate[i] = '/';
+		if (birthDateInput[i] == '\\' || birthDateInput[i] == '_' || birthDateInput[i] == '-' || birthDateInput[i] == '.')
+			birthDateInput[i] = '/';
 	}
-	char* dayBuffer = strtok(birthDate, "/");
+	char* dayBuffer = strtok(birthDateInput, "/");
 	if (dayBuffer == nullptr || !IsNumber(dayBuffer) || strlen(dayBuffer) > 2)
 		return false;
 	//std::cout << "DAY: " << dayBuffer << '\n';
@@ -87,7 +84,16 @@ bool ValidateAge(const char* birthDateInput)
 				return false;
 		}
 	}
+	std::string birthDayStr = std::to_string(birthDay);
+	if (birthDay < 10)
+		birthDayStr = "0" + birthDayStr;
+	std::string birthMonthStr = std::to_string(birthMonth);
+	if (birthMonth < 10)
+		birthMonthStr = "0" + birthMonthStr;
 
+	std::string formattedBirthDate = birthDayStr + "/" + birthMonthStr + "/" + std::to_string(birthYear);
+	strncpy(birthDateInput,formattedBirthDate.c_str(), DATE_LENGTH);
+	birthDateInput[DATE_LENGTH] = '\0';
 	return true;
 }
 
@@ -219,12 +225,14 @@ void CreateStudentFile()
 	}
 
 }
-void WriteStudentToFile(const Student student, std::ofstream& file)
+void WriteStudentToFile(Student student, std::ofstream& file)
 {
 	file << "[----]\n";
 	file << student.Name << '\n';
+	student.Id[2] = 'P';
 	file << student.Id << '\n';
 	file << student.NationalId << '\n';
+	student.Gender = toupper(student.Gender);
 	file << student.Gender << '\n';
 	file << student.BirthDate << '\n';
 	file << student.PhoneNumber << '\n';
@@ -713,7 +721,7 @@ void AddStudentMenu(Student* students, int amount)
 	std::cout << "Enter birth (DD/MM/YYYY): ";
 	std::cin >> inputBuffer;
 	RemoveSpaces(inputBuffer);
-	while (!ValidateAge(inputBuffer.c_str()))
+	while (!ValidateAge(inputBuffer.data()))
 	{
 		std::cout << "Invalid BirthDate [" << inputBuffer << "]. Format DD/MM/YYYY & min age 17 or back to exit \n";
 		std::cin >> inputBuffer;
@@ -955,7 +963,7 @@ void DeleteStudentMenu(Student* students, int* amount)
 	if (tolower(cin.get()) == 'y') {
 		int gradesCount = 0;
 		Grade* grades = LoadGrades(&gradesCount);
-		DeleteGradeByCourseId(grades, students[removeIndex].Id, &gradesCount);
+		DeleteGradeByStudentId(grades, students[removeIndex].Id, &gradesCount);
 		SaveGrades(grades, gradesCount);
 		delete[] grades;
 

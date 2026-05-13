@@ -42,7 +42,7 @@ struct Student
 
 
 //Validation ==========================================
-bool ValidateAge(const char* birthDate);
+bool ValidateAge(char* birthDate);
 bool ValidatePhoneNumber(const char* num);
 
 bool ValidateLevel(int level);
