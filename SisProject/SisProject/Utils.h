@@ -121,3 +121,22 @@ inline static bool IsNumber(std::string str)
 	}
 	return true;
 }
+
+inline static bool IsFloatNumber(const char* str)
+{
+	bool foundDot = false;
+	for (int i = 0; str[i] != '\0'; i++)
+	{
+		if (str[i] == '.')
+		{
+			if (foundDot)
+				return false;
+			foundDot = true;
+			continue;
+		}
+		if (str[i] < '0' || str[i] > '9' || (str[i]=='.' && foundDot))
+			return false;
+	}
+	return true;
+}
+

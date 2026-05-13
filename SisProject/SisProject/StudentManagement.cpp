@@ -74,11 +74,10 @@ bool ValidateAge(const char* birthDateInput)
 	//C stores months from 0 to 11
 	int currentMonth = currentTime->tm_mon + 1;
 	int currentDay = currentTime->tm_mday;
-	//std::cout << "Birthdate: " << birthDay << '/' << birthMonth << '/' << birthYear << '\n';
-	//std::cout << "Current date: " << currentDay << '/' << currentMonth << '/' << currentYear << '\n';
+	
 	if ((currentYear-MIN_AGE) < birthYear)
 		return false;
-	else if (currentYear == birthYear)
+	else if ((currentYear-MIN_AGE) == birthYear)
 	{
 		if (currentMonth < birthMonth)
 			return false;
@@ -833,6 +832,21 @@ void SearchStudents(Student* students, int amount)
 			return;
 		}
 	}
+	std::cout << "Enter Min GPA (enter 0 to ignore): \n";
+	std::string inputBuffer;
+	std::cin >> inputBuffer;
+	while (!IsFloatNumber(inputBuffer.c_str()) || (atof(inputBuffer.c_str()) < 0 || atof(inputBuffer.c_str()) > 4))
+	{
+		std::cout << "Invalid GPA [" << inputBuffer << "]. should be between 0 and 4 or enter back to continue\n";
+		std::cout << "Enter Min GPA: ";
+		std::cin >> inputBuffer;
+		if (inputBuffer == "back")
+		{
+			std::cout << "Going back to menu...\n";
+			PressEnterPause();
+			return;
+		}
+	}
 
 	int countFound = 0;
 	for (int i = 0; i < amount; i++)
@@ -841,7 +855,8 @@ void SearchStudents(Student* students, int amount)
 		bool idFilter = (searchId == "0" || (searchId == students[i].Id));
 		bool phoneFilter = (searchPhoneNumber == "0" || (searchPhoneNumber == students[i].PhoneNumber));
 		bool nationalIdFilter = (searchNationalId == "0" || (searchNationalId == students[i].NationalId));
-		if (nameFilter && idFilter && phoneFilter && nationalIdFilter) {
+		bool gpaFilter = (inputBuffer == "0" || (atof(inputBuffer.c_str()) <= students[i].Gpa));
+		if (nameFilter && idFilter && phoneFilter && nationalIdFilter && gpaFilter) {
 			PrintStudent(&students[i]);
 			countFound++;
 		}
