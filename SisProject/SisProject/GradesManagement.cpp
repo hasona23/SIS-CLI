@@ -152,7 +152,7 @@ static bool CourseExists(const char* courseId, Course* courses, int amount)
 
 void AddGrade(Grade* grades, int amount)
 {
-    Grade g;
+    Grade grade;
 
     cout << "\n=======Enter Student Grades========\n";
 	int studentsAmount = 0;
@@ -161,15 +161,15 @@ void AddGrade(Grade* grades, int amount)
 	int coursesAmount = 0;
 	Course* courses = LoadCourses(&coursesAmount);
     cout << "Enter Student id: ";
-    cin >> g.StudentId;
-	toUpper(g.StudentId);
-	while (!StudentExists(g.StudentId, students, studentsAmount))
+    cin >> grade.StudentId;
+	toUpper(grade.StudentId);
+	while (!StudentExists(grade.StudentId, students, studentsAmount))
 	{
-		cout << "Student with id " << g.StudentId << " not found. Please enter a valid student id.\n";
+		cout << "Student with id " << grade.StudentId << " not found. Please enter a valid student id.\n";
 		cout << "Enter Student id (back to exit): ";
-		cin >> g.StudentId;
-		toUpper(g.StudentId);
-		if (g.StudentId == "BACK")
+		cin >> grade.StudentId;
+		toUpper(grade.StudentId);
+		if (grade.StudentId == "BACK")
 		{
 			cout << "Going back to menu...\n";
 			delete[] students;
@@ -178,15 +178,15 @@ void AddGrade(Grade* grades, int amount)
 		}
 	}
     cout << "Enter Course code: ";
-    cin >> g.CourseId;
-	toUpper(g.CourseId);
-	while (!CourseExists(g.CourseId, courses, coursesAmount))
+    cin >> grade.CourseId;
+	toUpper(grade.CourseId);
+	while (!CourseExists(grade.CourseId, courses, coursesAmount))
 	{
-		cout << "Course with code " << g.CourseId << " not found. Please enter a valid course code.\n";
+		cout << "Course with code " << grade.CourseId << " not found. Please enter a valid course code.\n";
 		cout << "Enter Course code (back to exit): ";
-		cin >> g.CourseId;
-		toUpper(g.CourseId);
-		if (g.CourseId == "BACK")
+		cin >> grade.CourseId;
+		toUpper(grade.CourseId);
+		if (grade.CourseId == "BACK")
 		{
 			cout << "Going back to menu...\n";
 			delete[] courses;
@@ -196,9 +196,9 @@ void AddGrade(Grade* grades, int amount)
 	}
 	for (int i = 0; i < amount; i++)
 	{
-		if (strcmp(g.CourseId, grades[i].CourseId) == 0 && strcmp(g.StudentId, grades[i].StudentId) == 0)
+		if (strcmp(grade.CourseId, grades[i].CourseId) == 0 && strcmp(grade.StudentId, grades[i].StudentId) == 0)
 		{
-			cout << "Grades for student " << g.StudentId << " in course " << g.CourseId << " already exist. Please use update grade option to change the grade.\n";
+			cout << "Grades for student " << grade.StudentId << " in course " << grade.CourseId << " already exist. Please use update grade option to change the grade.\n";
 			PressEnterPause();
 			delete[] students;
 			delete[] courses;
@@ -208,35 +208,35 @@ void AddGrade(Grade* grades, int amount)
     do
     {
         cout << "Enter Midterm Grade(0:40): ";
-        cin >> g.MidTerm;
+        cin >> grade.MidTerm;
 
-        if (g.MidTerm < 0 || g.MidTerm > 40)
+        if (grade.MidTerm < 0 || grade.MidTerm > 40)
         {
             cout << "Invalid Midterm Grade!\n";
         }
 
-    } while (g.MidTerm < 0 || g.MidTerm > 40);
+    } while (grade.MidTerm < 0 || grade.MidTerm > 40);
 
     do
     {
         cout << "Enter Final Grade(0:60): ";
-        cin >> g.Final;
+        cin >> grade.Final;
 
-        if (g.Final < 0 || g.Final > 60)
+        if (grade.Final < 0 || grade.Final > 60)
         {
             cout << "Invalid Final Grade!\n";
         }
 
-    } while (g.Final < 0 || g.Final > 60);
+    } while (grade.Final < 0 || grade.Final > 60);
 
-	AppendGrade(&g);
+	AppendGrade(&grade);
 
-    int total = g.MidTerm + g.Final;
+    int total = grade.MidTerm + grade.Final;
 	cout << "\n=======Grade Summary========\n";
-	cout << "Student ID = " << g.StudentId << '\n';
-	cout << "Course ID = " << g.CourseId << '\n';
-	cout << "Midterm = " << g.MidTerm << "/40 \n";
-	cout << "Final = " << g.Final << "/60 \n";
+	cout << "Student ID = " << grade.StudentId << '\n';
+	cout << "Course ID = " << grade.CourseId << '\n';
+	cout << "Midterm = " << grade.MidTerm << "/40 \n";
+	cout << "Final = " << grade.Final << "/60 \n";
 	cout << "The Toltal = " << total << "/100 \n";
     cout << "Garde Added Successfully\n";
 	PressEnterPause();

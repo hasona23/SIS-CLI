@@ -365,17 +365,17 @@ void UpdateStudent(Student* student, const char* name, const char* phone, Progra
 }
 
 
-static void PrintStudent(const Student* s) {
+static void PrintStudent(const Student* student) {
 	std::cout << "========================\n";
-	std::cout << "ID           : " << s->Id << "\n";
-	std::cout << "Name         : " << s->Name << "\n";
-	std::cout << "National ID  : " << s->NationalId << "\n";
-	std::cout << "Phone        : " << s->PhoneNumber << "\n";
-	std::cout << "Gender       : " << s->Gender << "\n";
-	std::cout << "Program      : " << ProgramsStr[s->Program - 1] << "\n";
-	std::cout << "Level        : " << s->Level << "\n";
-	std::cout << "GPA          : " << s->Gpa << "\n";
-	std::cout << "Birthdate    : " << s->BirthDate << "\n";
+	std::cout << "ID           : " << student->Id << "\n";
+	std::cout << "Name         : " << student->Name << "\n";
+	std::cout << "National ID  : " << student->NationalId << "\n";
+	std::cout << "Phone        : " << student->PhoneNumber << "\n";
+	std::cout << "Gender       : " << student->Gender << "\n";
+	std::cout << "Program      : " << ProgramsStr[student->Program - 1] << "\n";
+	std::cout << "Level        : " << student->Level << "\n";
+	std::cout << "GPA          : " << student->Gpa << "\n";
+	std::cout << "Birthdate    : " << student->BirthDate << "\n";
 	std::cout << "========================\n";
 }
 
