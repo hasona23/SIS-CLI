@@ -113,10 +113,6 @@ bool ValidatePhoneNumber(const char* num)
 	return true;
 }
 
-bool ValidateGpa(double gpa)
-{
-	return gpa >= 0 && gpa <= 4;
-}
 
 bool ValidateLevel(int level)
 {
@@ -197,7 +193,7 @@ bool ValidateStudent(Student student)
 	return ValidateStudentId(student.Id) && ValidateGender(student.Gender) &&
 		ValidateName(student.Name) && ValidatePhoneNumber(student.PhoneNumber)
 		&& ValidateProgram(student.Program) && ValidateNationalId(student.NationalId)
-		&& ValidateLevel(student.Level) && ValidateGpa(student.Gpa);
+		&& ValidateLevel(student.Level);
 }
 
 
