@@ -8,14 +8,14 @@
 
 
 
-static void HelpMenu()
+static void UserManualMenu()
 {
 	int choice = 0;
 
 	while (choice != 5)
 	{
 		ClearCmd();
-		DisplayTitle("Help");
+		DisplayTitle("User Manual");
 
 		std::cout << "1. Student Management\n";
 		std::cout << "2. Course Management\n";
@@ -30,7 +30,7 @@ static void HelpMenu()
 		switch (choice)
 		{
 		case 1:
-			DisplayTitle("Help - Student Management");
+			DisplayTitle("User Manual - Student Management");
 			std::cout << "Add Student\n";
 			std::cout << "  Registers a new student. You will be prompted for:\n";
 			std::cout << "  - Name        : First and last name (letters only)\n";
@@ -61,7 +61,7 @@ static void HelpMenu()
 			break;
 
 		case 2:
-			DisplayTitle("Help - Course Management");
+			DisplayTitle("User Manual - Course Management");
 			std::cout << "Add Course\n";
 			std::cout << "  Registers a new course. You will be prompted for:\n";
 			std::cout << "  - Course ID    : Exactly 6 characters: 3 letters then 3 digits (e.g. CSC101)\n";
@@ -83,7 +83,7 @@ static void HelpMenu()
 			break;
 
 		case 3:
-			DisplayTitle("Help - Grades Management");
+			DisplayTitle("User Manual - Grades Management");
 			std::cout << "Enter Student Grades\n";
 			std::cout << "  Records grades for a student in a specific course.\n";
 			std::cout << "  - Student ID   : The student's assigned ID (e.g. 25P0001)\n";
@@ -105,7 +105,7 @@ static void HelpMenu()
 			break;
 
 		case 4:
-			DisplayTitle("Help - ID & Format Reference");
+			DisplayTitle("User Manual - ID & Format Reference");
 			std::cout << "Student ID  : 25P followed by 4 digits        (e.g. 25P0001)\n";
 			std::cout << "Course ID   : 3 uppercase letters + 3 digits  (e.g. CSC101)\n";
 			std::cout << "National ID : " << NATIONAL_ID_LENGTH << " digits                        \n";
@@ -169,7 +169,7 @@ int MainMenu() {//main menu func
 			GradesManagementMenu();
 			break;
 		case 4:
-			HelpMenu();
+			UserManualMenu();
 			break;
 		case 0:
 			cout << "Exiting, thank you for using the program." << '\n';
