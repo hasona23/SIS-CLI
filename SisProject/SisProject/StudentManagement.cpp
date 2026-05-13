@@ -91,7 +91,19 @@ bool ValidateAge(const char* birthDateInput)
 	return true;
 }
 
-
+void ModelizeStudentName(Student* students, int amount)
+{
+	for (int x = 0; x < amount; x++)
+	{
+		//toLower(students[x].Name);
+		for (int k = 0; students[x].Name[k] != '\0'; k++) {
+			if (k == 0 && (students[x].Name[k] >= 'a' && students[x].Name[k] <= 'z'))
+				students[x].Name[k] -= 32;
+			if (k != 0 && students[x].Name[k - 1] == ' ' && students[x].Name[k] >= 'a' && students[x].Name[k] <= 'z')
+				students[x].Name[k] -= 32;
+		}
+	}
+}
 bool ValidatePhoneNumber(const char* num)
 {
 	if (strlen(num) != PHONE_NUM_LENGTH)
@@ -178,6 +190,7 @@ bool ValidateName(const char* name)
 			return false;
 		}
 	}
+
 	return consistOfTwo;
 }
 bool ValidateStudent(Student student)
@@ -323,7 +336,7 @@ Student* LoadStudents(int* amount)
 		}
 
 		file.close();
-
+		ModelizeStudentName(students, *amount);
 		return students;
 	}
 	else {
@@ -456,8 +469,11 @@ static void SortStudentsByGpa(Student* students, int amount)
 		}
 	}
 }
+
+
 static void SortStudentsByName(Student* students, int amount)
 {
+	
 	bool hasSwapped = true;
 	while (hasSwapped)
 	{
