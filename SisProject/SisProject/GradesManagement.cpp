@@ -3,6 +3,37 @@
 
 using namespace std;
 
+std::string GetGpaLetter(int totalGrade)
+{
+	if (totalGrade >= 97)
+		return "A+";
+	else if (totalGrade >= 93)
+		return "A";
+	else if (totalGrade >= 90)
+		return "A-";
+	else if (totalGrade >= 87)
+		return "B+";
+	else if (totalGrade >= 83)
+		return "B";
+	else if (totalGrade >= 80)
+		return "B-";
+	else if (totalGrade >= 77)
+		return "C+";
+	else if (totalGrade >= 73)
+		return "C";
+	else if (totalGrade >= 70)
+		return "C-";
+	else if (totalGrade >= 67)
+		return "D+";
+	else if (totalGrade >= 65)
+		return "D";
+	else
+		return "F";
+}
+float GetGpaGrade(int totalGrade)
+{
+	return (totalGrade / 100.0) * 4.0;
+}
 
 void CreateGradesFile()
 {
@@ -242,44 +273,14 @@ void AddGrade(Grade* grades, int amount)
 	cout << "Midterm = " << grade.MidTerm << "/40 \n";
 	cout << "Final = " << grade.Final << "/60 \n";
 	cout << "The Toltal = " << total << "/100 \n";
-	cout << "GPA = " << GetGpaGrade(total) << " / 4.0 \n";
+	std::cout << "GPA = " << GetGpaGrade(total) << " / 4.0 \n";
 	cout << "Grade = " << GetGpaLetter(total) << '\n';
 	cout << "Garde Added Successfully\n";
 	PressEnterPause();
 	delete[] students;
 	delete[] courses;
 }
-std::string GetGpaLetter(int totalGrade)
-{
-	if(totalGrade >= 97)
-		return "A+";
-	else if (totalGrade >= 93)
-		return "A";
-	else if (totalGrade >= 90)
-		return "A-";
-	else if (totalGrade >= 87)
-		return "B+";
-	else if (totalGrade >= 83)
-		return "B";
-	else if (totalGrade >= 80)
-		return "B-";
-	else if (totalGrade >= 77)
-		return "C+";
-	else if (totalGrade >= 73)
-		return "C";
-	else if (totalGrade >= 70)
-		return "C-";
-	else if (totalGrade >= 67)
-		return "D+";
-	else if (totalGrade >= 65)
-		return "D";
-	else
-		return "F";
-}
-static float GetGpaGrade(int totalGrade)
-{
-	return (totalGrade/100.0)*4.0;
-}
+
 void UpdateGrade(Grade* grades, int amount) {
 	std::string studentId, courseId;
 	for (int i = 0; i < amount; i++)

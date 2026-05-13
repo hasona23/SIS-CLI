@@ -402,11 +402,12 @@ static int GetIdDigits(const char* id)
 {
 	int start = 3;
 	int amount = 0;
-	int power = 4;
-	for (int i = start; i < strlen(id); i++)
+	int power = 3;
+	for (int i = 0; i < 4; i++)
 	{
-		amount += atoi(&id[i]) * std::pow(10, power--);
+		amount += (id[i+start]-'0') * std::pow(10, power--);
 	}
+	
 	return amount;
 }
 static int GetIdYearDigits(const char* id)
@@ -414,6 +415,7 @@ static int GetIdYearDigits(const char* id)
 	int amount = 0;
 	amount += ((id[0] - '0') * 10);
 	amount += (id[1] - '0');
+	
 	return amount;
 }
 static void SortStudentsById(Student* students, int amount)
@@ -709,19 +711,19 @@ void AddStudentMenu(Student* students, int amount)
 	}
 	strncpy_s(student.BirthDate, inputBuffer.c_str(), DATE_LENGTH);
 
-	int maxId = 0;
+	int maxId = -1;
 	time_t currentTime_t = time(0);
 	tm* currentTime = localtime(&currentTime_t);
 	int currentYear = currentTime->tm_year + 1900;
-	delete currentTime;
+	std::cout << "Current Year: " << currentYear << '\n';
+
 	for (int i = 0; i < amount; i++)
 	{
-		// currentYear -2000 to get the year digits in the id and compare it with current year to get the students of the same year and assign id in sequence for them
 		if (GetIdYearDigits(students[i].Id) == (currentYear - 2000))
 		{
-
-
 			int id = GetIdDigits(students[i].Id);
+			std::cout << id << " (-) " << maxId<<'\n';
+			
 			if (id > maxId)
 				maxId = id;
 		}
@@ -768,8 +770,9 @@ void AddStudentMenu(Student* students, int amount)
 	std::cout << "Student Id: " << newId << '\n';
 	strncpy_s(student.Id, newId.c_str(), STUDENT_ID_LENGTH);
 	PrintStudent(&student);
-	PressEnterPause();
 	AppendStudent(student);
+	PressEnterPause();
+
 }
 
 void SearchStudents(Student* students, int amount)
