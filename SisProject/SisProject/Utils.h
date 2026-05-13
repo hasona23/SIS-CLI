@@ -1,5 +1,9 @@
 #pragma once
 #include <iostream>
+#include "StudentManagement.h"
+#include "Menu.h"
+#include "CourseManagement.h"
+#include "GradesManagement.h"
 using namespace std;
 
 
@@ -139,4 +143,3 @@ inline static bool IsFloatNumber(const char* str)
 	}
 	return true;
 }
-
