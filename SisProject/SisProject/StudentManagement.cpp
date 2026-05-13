@@ -102,7 +102,7 @@ bool ValidatePhoneNumber(const char* num)
 			return false;
 	}
 	//Check for egypt phone codes
-	if (num[2] != '0' && num[2] != '1' && num[2] != '2' && num[2] != '5'))
+	if (num[2] != '0' && num[2] != '1' && num[2] != '2' && num[2] != '5')
 		return false;
 	for (int i = 3; i < strlen(num); i++)
 	{
