@@ -101,7 +101,10 @@ bool ValidatePhoneNumber(const char* num)
 		if (num[i] != PHONE_NUM_PREFIX[i])
 			return false;
 	}
-	for (int i = 2; i < strlen(num); i++)
+	//Check for egypt phone codes
+	if (num[2] != '0' && num[2] != '1' && num[2] != '2' && num[2] != '5'))
+		return false;
+	for (int i = 3; i < strlen(num); i++)
 	{
 		if (!isalnum(num[i]))
 			return false;
