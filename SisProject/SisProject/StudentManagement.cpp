@@ -145,14 +145,14 @@ bool ValidateStudentId(const char* id)
 	}
 	if (id[0] == '0')
 		return false;
-	if (!isalnum(id[0]) || !isalnum(id[1]))
+	if (!isdigit(id[0]) || !isdigit(id[1]))
 		return false;
 	if (toupper(id[2]) != 'P')
 		return false;
 
 	for (int i = 3; i < strlen(id); i++)
 	{
-		if (!isalnum(id[i]))
+		if (!isdigit(id[i]))
 			return false;
 	}
 
